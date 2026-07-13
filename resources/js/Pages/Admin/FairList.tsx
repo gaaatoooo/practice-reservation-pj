@@ -58,7 +58,7 @@ export default function AdminFairList({ fairs, filters = {}, categories, statusL
         
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get('/admin/notices', values, {
+        router.get('/admin/fairs', values, {
             preserveState: true,
             replace: true,
         });
@@ -102,14 +102,14 @@ export default function AdminFairList({ fairs, filters = {}, categories, statusL
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 antialiased font-sans">
-            <Head title="【管理画面】フェア・プラン管理一覧" />
+            <Head title="【管理画面】フェア管理一覧" />
 
             {/* 管理画面専用ヘッダー */}
             <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-10 text-white">
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="bg-emerald-600 text-xs px-2 py-0.5 rounded font-bold tracking-wider">ADMIN</span>
-                        <h1 className="text-md font-bold tracking-tight">フェア・プラン管理</h1>
+                        <h1 className="text-md font-bold tracking-tight">フェア管理</h1>
                     </div>
                     <Link href="/admin/dashboard" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                         ダッシュボードへ戻る &rarr;
@@ -122,9 +122,9 @@ export default function AdminFairList({ fairs, filters = {}, categories, statusL
                 {/* タイトルと新規作成ボタン */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">フェア・プラン告知管理一覧</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">フェア管理一覧</h2>
                         <p className="text-sm text-slate-500 mt-1">
-                            特設フェア、期間限定宿泊プランなどの作成・編集・掲載制御を行います。
+                            特設フェアなどの作成・編集・掲載制御を行います。
                         </p>
                     </div>
                     <Link
@@ -250,7 +250,7 @@ export default function AdminFairList({ fairs, filters = {}, categories, statusL
                                 {fairs.data.length === 0 ? (
                                     <tr>
                                         <td colSpan={5} className="py-12 text-center text-slate-400">
-                                            登録されているフェア・プランはありません。
+                                            登録されているフェアはありません。
                                         </td>
                                     </tr>
                                 ) : (

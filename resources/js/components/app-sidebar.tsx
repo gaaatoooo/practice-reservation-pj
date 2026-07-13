@@ -1,6 +1,6 @@
 
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, CalendarDays, Megaphone, Sparkles, Hotel, BedDouble, Mail, Tags, Ticket, ShieldCheck, Star } from 'lucide-react';
+import { BookOpen, FolderGit2, LayoutGrid, CalendarDays, Megaphone, Sparkles, Hotel, BedDouble, Mail, Tags, Ticket, ShieldCheck, Star, Flag } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -116,6 +116,11 @@ export function AppSidebar() {
             title: 'フェアカテゴリ管理',
             href: '/admin/fair-categories',
             icon: Ticket,
+        },
+        {
+            title: 'プラン管理',
+            href: '/admin/plans',
+            icon: Flag,
         },
         {
             title: 'お問合せ管理',

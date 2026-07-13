@@ -77,5 +77,17 @@ return [
             2 => '非公開',
         ],
     ],
+    'Plan' => [
+        'Status' => [
+            'Draft' => 1,
+            'Published' => 2,
+            'Archived' => 3,
+        ],
+        'StatusName' => [
+            1 => '下書き',
+            2 => '公開中',
+            3 => '非公開',
+        ],
+    ]
     
 ];

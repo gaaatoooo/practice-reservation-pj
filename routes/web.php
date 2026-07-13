@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminRoomController;
 use App\Http\Controllers\Admin\AdminReviewController;
+use App\Http\Controllers\Admin\AdminPlanController;
 
 use App\Http\Controllers\RoomAvailabilityController;
 use App\Http\Controllers\ReservationController;
@@ -124,6 +125,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // 口コミ一覧
     Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+
+    // プラン管理（CRUD）
+    Route::get('/plans', [AdminPlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/create', [AdminPlanController::class, 'create'])->name('plans.create');
+    Route::post('/plans', [AdminPlanController::class, 'store'])->name('plans.store');
+    Route::get('/plans/{plan}/edit', [AdminPlanController::class, 'edit'])->name('plans.edit');
+    Route::patch('/plans/{plan}', [AdminPlanController::class, 'update'])->name('plans.update');
+    Route::delete('/plans/{plan}', [AdminPlanController::class, 'destroy'])->name('plans.destroy');
+    
 });
 
 // ユーザー用ルートグループ
