@@ -98,6 +98,7 @@ class ReservationController extends Controller
             'roomName' => $room->name,
             'planName' => $plan->name,
             'roomPrice' => $room->price,
+            'planPrice' => $plan->price,
             'nights' => $calculation['nights'],
             'totalPrice' => $calculation['total_price'],
             // フォームに直接入力された顧客情報を引き継ぐ

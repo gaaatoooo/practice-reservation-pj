@@ -1,6 +1,6 @@
 /* global route */
 import { Head, useForm } from '@inertiajs/react';
-import { format, parseISO, addDays } from 'date-fns';
+import { format, parseISO, addDays, differenceInDays } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { useState, useEffect } from 'react';
 import { DayPicker, type DateRange } from 'react-day-picker';
@@ -18,6 +18,7 @@ type PlanItem = {
     id: number;
     name: string;
     description: string | null;
+    planPrice: number;
 };
 
 type UserInfo = {
@@ -62,6 +63,9 @@ export default function ReservationForm({ date, roomId, roomName, roomPrice, roo
         to: initialEnd,
     });
 
+    // ⭕️ リアルタイムに変動する合計金額を保持する状態
+    const [totalPrice, setTotalPrice] = useState<number>(0);
+
     // ⭕️ フォームの初期値設定を「inputs」の箱から厳密に読み込む形に修正
     const { data, setData, post, processing, errors } = useForm({
         room_id: roomId,
@@ -80,6 +84,19 @@ export default function ReservationForm({ date, roomId, roomName, roomPrice, roo
         guest_birthday: inputs?.guest_birthday || '',
     });
 
+    // ⭕️ 1. 選択されたプランを安全に逆引き（型を確実にあわせる）
+    const selectedPlan = plans?.find(p => Number(p.id) === Number(data.plan_id));
+
+    // ⭕️ 2. 選択された部屋を安全に逆引き
+    const selectedRoom = rooms?.find(r => Number(r.id) === Number(data.room_id));
+
+    // ⭕️ 3. 三項演算子と Number() を使い、確実に「数値（number）」を取り出す。型崩れ時は 0 に逃がす
+    const planPrice = selectedPlan ? Number((selectedPlan as any).price) : 0;
+    const roomUnitPrice = selectedRoom ? Number(selectedRoom.price) : 0;
+
+    // ⭕️ 4. 1泊単価の合算（どちらも確実に数値型なので、100% NaN になりません）
+    const currentPrice = (isNaN(roomUnitPrice) ? 0 : roomUnitPrice) + (isNaN(planPrice) ? 0 : planPrice);
+
     useEffect(() => {
         if (range?.from) {
             setData('reservation_start_date', format(range.from, 'yyyy-MM-dd'));
@@ -91,18 +108,27 @@ export default function ReservationForm({ date, roomId, roomName, roomPrice, roo
 
     }, [range]);
 
-    const selectedPlan = plans.find(p => p.id === Number(data.plan_id));
+    useEffect(() => {
+        let nights = 1;
+
+        if (range?.from && range?.to) {
+            const calculatedNights = differenceInDays(range.to, range.from);
+        
+            if (calculatedNights > 0) {
+                nights = calculatedNights;
+            }
+        }
+
+        const guestCount = Number(data.number) || 1;
+        const calculatedTotal = ((roomUnitPrice + planPrice) * guestCount) * nights;
+
+        setTotalPrice(calculatedTotal);
+    }, [data.room_id, data.plan_id, data.number, range, roomUnitPrice, planPrice]);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         post('/user/reservation/confirm');
     };
-
-    // 1. 選択されている部屋のオブジェクトを rooms マスタからリアルタイムに逆引き
-    const selectedRoom = rooms.find(r => Number(r.id) === Number(data.room_id));
-    
-    // 2. 部屋が選ばれていればその料金、未選択なら 0 円とする
-    const currentPrice = selectedRoom ? selectedRoom.price : 0;
 
     return (
         <>
@@ -225,40 +251,40 @@ export default function ReservationForm({ date, roomId, roomName, roomPrice, roo
                             </h3>
                             
                             <div className="grid gap-2">
-                            <label htmlFor="room_id" className="text-sm font-bold text-gray-700">お部屋タイプ</label>
-                            <select
-                                id="room_id"
-                                name="room_id"
-                                value={data.room_id || ''}
-                                // ⭕️ 修正：Numberキャスト
-                                onChange={e => setData('room_id', Number(e.target.value))}
-                                required
-                                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >
-                                {/* 最初のプレースホルダー（選択必須とするためvalueは空文字） */}
-                                <option value="">-- お部屋を選択してください --</option>
-                                {rooms.map((room) => (
-                                    <option key={room.id} value={room.id}>
-                                        {room.name}
-                                    </option>
-                                ))}
-                            </select>
+                                <label htmlFor="room_id" className="text-sm font-bold text-gray-700">お部屋タイプ</label>
+                                <select
+                                    id="room_id"
+                                    name="room_id"
+                                    value={data.room_id || ''}
+                                    // ⭕️ 修正：Numberキャスト
+                                    onChange={e => setData('room_id', Number(e.target.value))}
+                                    required
+                                    className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                >
+                                    {/* 最初のプレースホルダー（選択必須とするためvalueは空文字） */}
+                                    <option value="">-- お部屋を選択してください --</option>
+                                    {rooms.map((room) => (
+                                        <option key={room.id} value={room.id}>
+                                            {room.name}
+                                        </option>
+                                    ))}
+                                </select>
 
-                            {/* ⭕️ 追加：選択されたお部屋の説明文をリアルタイムに表示するエリア */}
-                            {selectedRoom && selectedRoom.description && (
-                                <div className="mt-2 p-3 bg-neutral-50 dark:bg-neutral-800/40 rounded-lg border border-neutral-100 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap animate-fade-in">
-                                    <strong className="text-neutral-700 dark:text-neutral-300 block mb-1">【客室のご案内】</strong>
-                                    {selectedRoom.description}
-                                </div>
-                            )}
+                                {/* ⭕️ 追加：選択されたお部屋の説明文をリアルタイムに表示するエリア */}
+                                {selectedRoom && selectedRoom.description && (
+                                    <div className="mt-2 p-3 bg-neutral-50 dark:bg-neutral-800/40 rounded-lg border border-neutral-100 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap animate-fade-in">
+                                        <strong className="text-neutral-700 dark:text-neutral-300 block mb-1">【客室のご案内】</strong>
+                                        {selectedRoom.description}
+                                    </div>
+                                )}
 
-                            {/* ⭕️ 追加：お部屋未選択時にInertiaのバックエンドエラーを表示するガード */}
-                            {errors.room_id && (
-                                <div className="text-sm text-red-600 font-medium mt-1">
-                                    {errors.room_id}
-                                </div>
-                            )}
-                        </div>
+                                {/* ⭕️ 追加：お部屋未選択時にInertiaのバックエンドエラーを表示するガード */}
+                                {errors.room_id && (
+                                    <div className="text-sm text-red-600 font-medium mt-1">
+                                        {errors.room_id}
+                                    </div>
+                                )}
+                            </div>
                             
                             <div className="flex flex-col gap-1 border-b pb-3">
                                 <span className="text-xs text-neutral-400">選択中のプラン</span>
