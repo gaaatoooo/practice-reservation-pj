@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import React from 'react';
+import { differenceInDays } from 'date-fns';
+import React, { useEffect } from 'react';
 
 // マスタ選択用に必要な型定義
 interface User {
@@ -17,6 +18,7 @@ interface Room {
 interface Plan {
     id: number;
     name: string;
+    price: number;
 }
 
 interface Props {
@@ -26,6 +28,7 @@ interface Props {
 }
 
 export default function AdminReservationCreate({ users, rooms, plans }: Props) {
+    
     // 📝 新規予約作成用フォームの初期値定義
     const { data, setData, post, processing, errors } = useForm({
         user_id: '',
@@ -39,18 +42,64 @@ export default function AdminReservationCreate({ users, rooms, plans }: Props) {
         number: ''
     });
 
-    // 部屋が選択された際、自動で基本料金を合計金額の初期値としてセットする補助ロジック
-    const handleRoomChange = (roomId: string) => {
-        setData(prev => {
-            const nextData = { ...prev, room_id: roomId };
-            const selectedRoom = rooms.find(r => r.id === Number(roomId));
+    useEffect(() => {
+        // ⭕️ 1. 変更された最新の data.room_id / data.plan_id から、useEffect の中で都度単価を引き直す
+        const currentRoom = rooms.find(r => r.id === Number(data.room_id));
+        const currentPlan = plans.find(p => p.id === Number(data.plan_id));
 
-            if (selectedRoom) {
-                nextData.total_price = String(selectedRoom.price);
+        const validRoomPrice = currentRoom ? Number(currentRoom.price) : 0;
+        const validPlanPrice = currentPlan ? Number(currentPlan.price) : 0;
+
+        console.log(currentPlan);
+        console.log(validPlanPrice);
+
+        // 2. 泊数の計算
+        let nights = 1;
+
+        if (data.reservation_start_date && data.reservation_end_date) {
+            const checkInDate = new Date(data.reservation_start_date);
+            const checkOutDate = new Date(data.reservation_end_date);
+
+            if (!isNaN(checkInDate.getTime()) && !isNaN(checkOutDate.getTime())) {
+                const calculatedNights = differenceInDays(checkOutDate, checkInDate);
+                
+                if (calculatedNights > 0) {
+                    nights = calculatedNights;
+                }
             }
-            
-            return nextData;
-        });
+        }
+
+        // 3. 人数の取得
+        const guestCount = Number(data.number) || 1;
+        
+        // ⭕️ 4. 最新の単価を合計して計算
+        const calculatedTotal = ((validRoomPrice + validPlanPrice) * guestCount) * nights;
+
+        // 5. ステートの更新
+        if (isNaN(calculatedTotal)) {
+            setData('total_price', '0');
+        } else {
+            setData('total_price', String(calculatedTotal));
+        }
+    
+    // ⭕️ 依存配列に data.check_in と data.check_out を指定
+    }, [data.room_id, data.plan_id, data.number, data.reservation_start_date, data.reservation_end_date, rooms, plans]);
+    
+    
+    // ⭕️ 3. 部屋が選択された際の処理（料金セットの責務を useEffect に移譲したためシンプルに）
+    const handleRoomChange = (roomId: string) => {
+        setData(prev => ({
+            ...prev,
+            room_id: roomId
+        }));
+    };
+    
+    // ⭕️ 4. プランが選択された際の処理（追加）
+    const handlePlanChange = (planId: string) => {
+        setData(prev => ({
+            ...prev,
+            plan_id: planId
+        }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -183,7 +232,7 @@ export default function AdminReservationCreate({ users, rooms, plans }: Props) {
                             <select
                                 id="plan_id"
                                 value={data.plan_id}
-                                onChange={(e) => setData('plan_id', e.target.value)}
+                                onChange={(e) => handlePlanChange(e.target.value)}
                                 className="w-full bg-transparent border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
                             >
                                 <option value="">-- プランを選択してください --</option>

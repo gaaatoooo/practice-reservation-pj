@@ -88,7 +88,7 @@ class AdminReservationController extends Controller
             ->orderBy('id', 'asc')
             ->get();
 
-        $plans = Plan::select('id', 'name')
+        $plans = Plan::select('id', 'name', 'price')
             ->orderBy('id', 'asc')
             ->get();
 
@@ -123,7 +123,7 @@ class AdminReservationController extends Controller
         ->orderBy('id', 'asc')
         ->get();
 
-        $plans = Plan::select('id', 'name')
+        $plans = Plan::select('id', 'name', 'price')
         ->orderBy('id', 'asc')
         ->get();
 

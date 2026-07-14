@@ -1,4 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import { differenceInDays } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import CancelConfirmModal from '@/components/layout/admin/CancelConfirmModal';
 import CheckinConfirmModal from '@/components/layout/admin/CheckinConfirmModal';
@@ -23,6 +24,7 @@ interface Room {
 interface Plan {
     id: number;
     name: string;
+    price: number;
 }
 
 interface Reservation {
@@ -87,19 +89,36 @@ export default function AdminReservationDetail({ reservation, rooms, plans }: Pr
     useEffect(() => {
         // 1. 画面のセレクトボックスで選択されているお部屋の料金を取得（マスタから検索）
         const selectedRoom = rooms?.find(r => r.id === Number(data.room_id));
+        const selectedPlan = plans.find(p => p.id === Number(data.plan_id));
         // マスタにあればその料金、なければ初期データの料金をフォールバックとして使用
         const roomPrice = selectedRoom ? (selectedRoom.price || selectedRoom.price || 0) : (reservation.room?.price || reservation.room?.price || 0);
+        const planPrice = selectedPlan ? (selectedPlan.price || selectedPlan.price || 0) : (reservation.plan?.price || reservation.plan?.price || 0);
+
+        let nights = 1;
+
+        if (data.reservation_start_date && data.reservation_end_date) {
+            const checkInDate = new Date(data.reservation_start_date);
+            const checkOutDate = new Date(data.reservation_end_date);
+        
+            if (!isNaN(checkInDate.getTime()) && !isNaN(checkOutDate.getTime())) {
+                const calculatedNights = differenceInDays(checkOutDate, checkInDate);
+                        
+                if (calculatedNights > 0) {
+                    nights = calculatedNights;
+                }
+            }
+        }
 
         // 3. 宿泊人数の取得
         const count = Number(data.number) || 1;
 
         // 【計算式】 （お部屋基本単価 × 人数） ＋ プランアドオン料金
-        const calculatedTotal = (roomPrice * count);
+        const calculatedTotal = (roomPrice + planPrice) * count * nights;
         
         // 4. フォームの total_price を更新（右側の巨大金額表示にも即時連動）
         setData('total_price', calculatedTotal);
 
-    }, [data.room_id, data.number]);
+    }, [data.room_id, data.plan_id, data.number, data.reservation_start_date, data.reservation_end_date]);
 
     // 予約情報の一括更新ハンドラ
     const handleUpdateSubmit = (e: React.FormEvent) => {
