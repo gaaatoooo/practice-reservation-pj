@@ -32,7 +32,7 @@ export default function ReviewListPage({ reviews = [] }: Props) {
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 antialiased">
-            <Head title="マイページ - 口コミ投稿履歴" />
+            <Head title="口コミ投稿履歴" />
 
             {/* ヘッダー */}
             <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
