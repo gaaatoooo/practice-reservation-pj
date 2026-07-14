@@ -50,9 +50,6 @@ export default function AdminReservationCreate({ users, rooms, plans }: Props) {
         const validRoomPrice = currentRoom ? Number(currentRoom.price) : 0;
         const validPlanPrice = currentPlan ? Number(currentPlan.price) : 0;
 
-        console.log(currentPlan);
-        console.log(validPlanPrice);
-
         // 2. 泊数の計算
         let nights = 1;
 
