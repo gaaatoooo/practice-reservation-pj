@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminRoomController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminPlanController;
+use App\Http\Controllers\Admin\AdminMemberController;
 
 use App\Http\Controllers\RoomAvailabilityController;
 use App\Http\Controllers\ReservationController;
@@ -136,6 +137,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::patch('/plans/{plan}', [AdminPlanController::class, 'update'])->name('plans.update');
     Route::delete('/plans/{plan}', [AdminPlanController::class, 'destroy'])->name('plans.destroy');
     
+    // ユーザー管理（CRUD）
+    Route::get('/members', [AdminMemberController::class, 'index'])->name('members.index');
+    Route::get('/members/{member}/edit', [AdminMemberController::class, 'edit'])->name('members.edit');
+    Route::patch('/members/{member}', [AdminMemberController::class, 'update'])->name('members.update');
+    Route::delete('/members/{member}', [AdminMemberController::class, 'destroy'])->name('members.destroy');
+
 });
 
 // ユーザー用ルートグループ

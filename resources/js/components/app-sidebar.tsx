@@ -1,6 +1,6 @@
 
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, CalendarDays, Megaphone, Sparkles, Hotel, BedDouble, Mail, Tags, Ticket, ShieldCheck, Star, Flag } from 'lucide-react';
+import { BookOpen, FolderGit2, LayoutGrid, CalendarDays, Megaphone, Sparkles, Hotel, BedDouble, Mail, Tags, Ticket, ShieldCheck, Star, Flag, User } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -126,6 +126,11 @@ export function AppSidebar() {
             title: 'お問合せ管理',
             href: '/admin/contacts',
             icon: Mail,
+        },
+        {
+            title: '会員管理',
+            href: '/admin/members',
+            icon: User,
         },
         {
             title: '管理者管理',
