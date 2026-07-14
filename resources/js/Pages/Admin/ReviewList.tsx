@@ -1,6 +1,7 @@
-import { Head, Link } from '@inertiajs/react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Head, Link, router } from '@inertiajs/react';
+import { ChevronDown, ChevronUp, CornerDownRight, Reply } from 'lucide-react';
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 type ReviewItem = {
     id: number;
@@ -10,6 +11,7 @@ type ReviewItem = {
     user?: { name: string };
     room?: { name: string };
     plan?: { name: string };
+    reply_content?: string | null; 
 };
 
 type Props = {
@@ -20,8 +22,12 @@ type Props = {
 };
 
 export default function Index({ reviews }: Props) {
-    // ⭕️ 各行の「すべて表示」状態を管理するオブジェクトステート（キーがreview.id）
+
     const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
+
+    // ⭕️ 各行の返信テキストを個別に管理するローカルステート
+    const [replyInputs, setReplyInputs] = useState<Record<number, string>>({});
+    const [submittingId, setSubmittingId] = useState<number | null>(null);
 
     // 開閉トグル処理
     const toggleRow = (id: number) => {
@@ -29,6 +35,41 @@ export default function Index({ reviews }: Props) {
             ...prev,
             [id]: !prev[id]
         }));
+    };
+
+    // ⭕️ 個別の返信入力値の変更をキャッチ
+    const handleReplyChange = (id: number, text: string) => {
+        setReplyInputs(prev => ({
+            ...prev,
+            [id]: text
+        }));
+    };
+
+    const handleSendReply = (e: React.FormEvent, reviewId: number) => {
+        e.preventDefault();
+        const content = replyInputs[reviewId];
+
+        if (!content || !content.trim()) {
+            return;
+        }
+
+        setSubmittingId(reviewId);
+
+        // お問合せ管理と同様のエンドポイント規約でPOST送信
+        router.patch(`/admin/reviews/${reviewId}/reply`, {
+            reply_content: content // ⭕️ データを直接第2引数として引き渡す
+        }, {
+            preserveScroll: true, // 画面のスクロール位置をキープする快適なおもてなし設定
+            onSuccess: () => {
+                setReplyInputs(prev => ({ ...prev, [reviewId]: '' }));
+                setSubmittingId(null);
+                alert('レビューへの返信を登録しました。');
+            },
+            onError: (errors) => {
+                setSubmittingId(null);
+                console.error('バリデーションエラー詳細:', errors);
+            }
+        });
     };
 
     return (
@@ -81,52 +122,117 @@ export default function Index({ reviews }: Props) {
                                 ) : (
                                     reviews.data.map((review) => {
                                         const isExpanded = !!expandedRows[review.id];
-                                        // 60文字を超える場合は切り詰め対象にする
                                         const isLongComment = review.comment.length > 60;
                                         
-                                        // ⭕️ 表示するテキストの動的制御
+                                        // 表示するテキストの動的制御（展開時はすべて表示）
                                         const displayText = isLongComment && !isExpanded
                                             ? `${review.comment.substring(0, 60)}...`
                                             : review.comment;
 
                                         return (
-                                            <tr key={review.id} className="hover:bg-slate-50/50 transition-colors items-start">
-                                                <td className="p-4 font-mono text-slate-400 align-top">#{review.id}</td>
-                                                <td className="p-4 text-slate-500 align-top">
-                                                    {new Date(review.created_at).toLocaleDateString('ja-JP')}
-                                                </td>
-                                                <td className="p-4 font-medium text-slate-900 align-top">
-                                                    {review.user ? review.user.name : '退会済みユーザー'}
-                                                </td>
-                                                <td className="p-4 align-top space-y-1">
-                                                    <div className="font-bold text-slate-800">{review.room ? review.room.name : '削除部屋'}</div>
-                                                    <div className="text-[11px] text-slate-400">{review.plan ? review.plan.name : '削除プラン'}</div>
-                                                </td>
-                                                <td className="p-4 align-top">
-                                                    <div className="flex items-center gap-0.5 text-amber-500 font-bold">
-                                                        <span>★</span>
-                                                        <span className="text-slate-900">{review.rating}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="p-4 text-slate-700 leading-relaxed align-top">
-                                                    <div className="whitespace-pre-wrap font-medium">{displayText}</div>
-                                                    
-                                                    {/* ⭕️ 長文の時だけ「すべて表示する/閉じる」のフラットリンクを表示 */}
-                                                    {isLongComment && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => toggleRow(review.id)}
-                                                            className="mt-1.5 text-indigo-600 hover:text-indigo-500 font-bold flex items-center gap-0.5 transition-colors focus:outline-none"
-                                                        >
+                                            <React.Fragment key={review.id}>
+                                                {/* ⭕️ メインのデータ行（行全体のクリックでも開閉可能にするため cursor-pointer を付与） */}
+                                                <tr 
+                                                    onClick={() => toggleRow(review.id)}
+                                                    className={`hover:bg-slate-50/70 transition-colors items-start cursor-pointer select-none ${
+                                                        isExpanded ? 'bg-slate-50/40' : ''
+                                                    }`}
+                                                >
+                                                    <td className="p-4 font-mono text-slate-400 align-top">#{review.id}</td>
+                                                    <td className="p-4 text-slate-500 align-top">
+                                                        {new Date(review.created_at).toLocaleDateString('ja-JP')}
+                                                    </td>
+                                                    <td className="p-4 font-medium text-slate-900 align-top">
+                                                        {review.user ? review.user.name : '退会済みユーザー'}
+                                                    </td>
+                                                    <td className="p-4 align-top space-y-1">
+                                                        <div className="font-bold text-slate-800">{review.room ? review.room.name : '削除部屋'}</div>
+                                                        <div className="text-[11px] text-slate-400">{review.plan ? review.plan.name : '削除プラン'}</div>
+                                                    </td>
+                                                    <td className="p-4 align-top">
+                                                        <div className="flex items-center gap-0.5 text-amber-500 font-bold">
+                                                            <span>★</span>
+                                                            <span className="text-slate-900">{review.rating}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-4 text-slate-700 leading-relaxed align-top">
+                                                        <div className="whitespace-pre-wrap font-medium">{displayText}</div>
+                                                        
+                                                        {/* 開閉状態を示すフラット補助リンク（クリックイベントのバブリングを止めて重複発火を防止） */}
+                                                        <div className="mt-2 text-indigo-600 hover:text-indigo-500 font-bold flex items-center gap-0.5 transition-colors text-[11px]">
                                                             {isExpanded ? (
-                                                                <>表示を閉じる <ChevronUp size={13} /></>
+                                                                <span className="flex items-center gap-0.5">返信エリアを閉じる <ChevronUp size={12} /></span>
                                                             ) : (
-                                                                <>すべて表示する <ChevronDown size={13} /></>
+                                                                <span className="flex items-center gap-0.5">
+                                                                    {isLongComment ? 'すべて表示して返信する' : (review.reply_content ? 'このレビューの返信を確認する' :'このレビューに返信する')} 
+                                                                    <ChevronDown size={12} />
+                                                                </span>
                                                             )}
-                                                        </button>
-                                                    )}
-                                                </td>
-                                            </tr>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {/* ⭕️ アコーディオン展開行：該当行が開いている場合のみ下に差し込む */}
+                                                {isExpanded && (
+                                                    <tr className="bg-slate-50/30 border-t border-b border-slate-200/50 animate-in fade-in slide-in-from-top-1 duration-150">
+                                                        <td colSpan={6} className="p-4 pl-12 pr-6">
+                                                            <div className="flex items-start gap-3 w-full" onClick={(e) => e.stopPropagation()}>
+                                                                <CornerDownRight className="text-slate-400 shrink-0 mt-1" size={16} />
+                                                                
+                                                                {/* ⭕️ 分岐：すでにデータベースに返信（review.reply_content）が存在する場合 */}
+                                                                {review.reply_content ? (
+                                                                    <div className="flex-1 bg-indigo-50/40 border border-indigo-100 rounded-xl p-4 text-left animate-in fade-in duration-200">
+                                                                        <div className="text-[11px] font-bold text-indigo-600 flex items-center gap-1 uppercase mb-2">
+                                                                            <Reply size={12} /> 投稿済みの公式返信
+                                                                        </div>
+                                                                        <div className="text-xs text-slate-800 font-medium whitespace-pre-wrap leading-relaxed">
+                                                                            {review.reply_content}
+                                                                        </div>
+                                                                        {/* 💡 必要であれば、ここに「返信を編集する」ボタンなどを将来配置可能です */}
+                                                                    </div>
+                                                                ) : (
+                                                                    /* ⭕️ 分岐：まだ返信がない場合のみ、入力フォームを表示する */
+                                                                    <form 
+                                                                        onSubmit={(e) => handleSendReply(e, review.id)}
+                                                                        className="flex-1 flex flex-col gap-3"
+                                                                    >
+                                                                        <div className="grid gap-1.5">
+                                                                            <label className="text-[11px] font-bold text-indigo-600 flex items-center gap-1 uppercase">
+                                                                                <Reply size={12} /> この宿泊レビューへの公式返信内容
+                                                                            </label>
+                                                                            <textarea
+                                                                                value={replyInputs[review.id] || ''}
+                                                                                onChange={(e) => handleReplyChange(review.id, e.target.value)}
+                                                                                placeholder="投稿者様へのお礼やコメントをご入力ください（この内容はサイト上に公式返信として公開されます）。"
+                                                                                required
+                                                                                rows={4}
+                                                                                className="w-full text-xs border border-slate-200 rounded-lg p-3 bg-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 leading-relaxed font-medium"
+                                                                            />
+                                                                        </div>
+                                                                        
+                                                                        <div className="flex justify-end gap-2">
+                                                                            <Button
+                                                                                type="button"
+                                                                                variant="outline"
+                                                                                className="h-8 text-[11px] text-slate-500 border-slate-200"
+                                                                                onClick={() => toggleRow(review.id)}
+                                                                            >
+                                                                                閉じる
+                                                                            </Button>
+                                                                            <Button
+                                                                                type="submit"
+                                                                                disabled={submittingId === review.id || !(replyInputs[review.id]?.trim())}
+                                                                                className="h-8 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] px-4 rounded-md shadow-sm"
+                                                                            >
+                                                                                {submittingId === review.id ? '登録中...' : '公式返信を投稿する'}
+                                                                            </Button>
+                                                                        </div>
+                                                                    </form>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </React.Fragment>
                                         );
                                     })
                                 )}

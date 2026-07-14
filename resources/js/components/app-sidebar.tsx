@@ -75,7 +75,7 @@ export function AppSidebar() {
         },
         {
             title: '口コミ投稿',
-            href: '/user/review/create',
+            href: '/user/review',
             icon: Star,
         },
     ];

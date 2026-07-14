@@ -13,6 +13,7 @@ class Review extends Model
         'plan_id',
         'rating',
         'comment',
+        'reply_content'
     ];
 
     /**

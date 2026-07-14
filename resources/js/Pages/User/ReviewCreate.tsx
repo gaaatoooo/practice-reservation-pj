@@ -57,8 +57,8 @@ export default function ReviewCreate({ rooms, plans }: Props) {
                     <>
                         {/* 戻る導線とタイトル */}
                         <div>
-                            <Link href="/user/dashboard" className="inline-flex items-center text-xs text-slate-500 hover:text-slate-900 mb-2 transition-colors">
-                                <ArrowLeft className="mr-1 h-3.5 w-3.5" /> ダッシュボードへ戻る
+                            <Link href="/user/review" className="inline-flex items-center text-xs text-slate-500 hover:text-slate-900 mb-2 transition-colors">
+                                <ArrowLeft className="mr-1 h-3.5 w-3.5" /> 投稿履歴一覧へ戻る
                             </Link>
                             <h1 className="text-xl font-bold tracking-tight text-slate-900">ご宿泊の口コミ・評価の投稿</h1>
                             <p className="text-xs text-slate-500 mt-1">今後のサービス向上のため、お客様のご感想をぜひお聞かせください。</p>

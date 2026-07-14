@@ -58,6 +58,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/mypage/reservations/{id}/checkin', [MypageController::class, 'checkin'])->name('reservations.checkin');
 
     // 口コミ投稿画面
+    Route::get('/user/review', [ReviewController::class, 'index'])->name('user.reviews.index');
     Route::get('/user/review/create', [ReviewController::class, 'create'])->name('review.create');
     Route::post('/user/review', [ReviewController::class, 'store'])->name('review.store');
 });
@@ -125,6 +126,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // 口コミ一覧
     Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('/reviews/{id}/reply', [AdminReviewController::class, 'reply'])->name('reviews.reply');
 
     // プラン管理（CRUD）
     Route::get('/plans', [AdminPlanController::class, 'index'])->name('plans.index');
