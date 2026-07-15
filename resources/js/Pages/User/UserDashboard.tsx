@@ -1,6 +1,7 @@
-/* global route */
 import { Head } from '@inertiajs/react';
+import ChatBotWidget from '@/components/layout/ChatBotWidget';
 import FairSlider from '@/components/layout/FairSlider';
+import HeroBanner from '@/components/layout/HeroBanner';
 import NoticeList from '@/components/layout/NoticeList';
 import RoomCalendar from '@/components/layout/RoomCalendar';
 
@@ -8,6 +9,9 @@ export default function UserDashboard() {
     return (
         <>
             <Head title="宿泊予約画面" />
+            
+            <HeroBanner />
+
             <div className="m-2">
                 <div className="md:grid gap-2 mb-2 grid-cols-1 md:grid-cols-2">
                     {/* カレンダーエリア */}
@@ -36,6 +40,7 @@ export default function UserDashboard() {
                     </div>
                 </div>
             </div>
+            <ChatBotWidget />
         </>
     );
 }

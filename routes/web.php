@@ -24,6 +24,7 @@ use App\Http\Controllers\HotelInfoController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ChatBotController;
 
 Route::inertia('/', 'welcome')->name('home');
 Route::inertia('dashboard', 'dashboard')->name('dashboard');
@@ -176,5 +177,10 @@ Route::match(['get', 'post'],'/user/contact', [ContactController::class, 'showFo
 Route::post('/user/contact/confirm', [ContactController::class, 'showConfirm'])->name('contact.confirm'); // 確認
 Route::post('/user/contact/store', [ContactController::class, 'store'])->name('contact.store');      // 確定
 Route::get('/user/contact/thanks', [ContactController::class, 'showThanks'])->name('contact.thanks');  // 完了
+
+// チャットボットAPI
+Route::prefix('api')->group(function () {
+    Route::post('/chatbot/ask', [ChatBotController::class, 'ask']);
+});
 
 require __DIR__.'/settings.php';

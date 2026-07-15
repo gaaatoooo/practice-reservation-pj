@@ -86,10 +86,10 @@ class AdminFairController extends Controller
             $filename = $file->getClientOriginalName();
             
             // storage/app/public/img/ の中へ安全に保存
-            Storage::disk('public')->putFileAs('img', $file, $filename);
+            Storage::disk('public')->putFileAs('img/fair', $file, $filename);
             
             // データベースには 'storage/img/〜' の形でパスを保存（artisan storage:link前提）
-            $data['image_url'] = '/img/' . $filename;
+            $data['image_url'] = '/img/fair' . $filename;
         }
 
         Fair::create($data);
@@ -132,8 +132,8 @@ class AdminFairController extends Controller
             $filename = $file->getClientOriginalName();
             
             // 新しい画像を保存
-            Storage::disk('public')->putFileAs('img', $file, $filename);
-            $data['image_url'] = '/img/' . $filename;
+            Storage::disk('public')->putFileAs('img/fair', $file, $filename);
+            $data['image_url'] = '/img/fair/' . $filename;
         }
 
         $fair->update($data);

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Room;
@@ -271,8 +270,6 @@ class AdminReservationController extends Controller
     private function exportPdf($query)
     {
         $reservations = $query->with(['room','plan','user'])->latest('id')->get();
-
-        log::alert($reservations);
 
         // ⭕️ ファサードを使わず、サービスコンテナからラッパーを直接生成する
         $pdf = app()->make('dompdf.wrapper');
