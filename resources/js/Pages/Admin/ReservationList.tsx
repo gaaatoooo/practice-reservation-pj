@@ -1,7 +1,8 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Plus, ChevronDown, ChevronUp, Search } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Search, FileDown, FileText } from 'lucide-react';
 import React, { useState } from 'react';
 import Pagination from '@/components/layout/admin/Pagination'; 
+import { Button } from '@/components/ui/button';
 
 interface LinkItem {
     url: string | null;
@@ -68,6 +69,42 @@ export default function AdminReservationList({ reservations, filters }: Props) {
         };
         setValues(resetValues);
         router.get('/admin/reservations', resetValues);
+    };
+
+    // ⭕️ CSV出力ハンドラ（現在の検索条件を引き継ぐ）
+    const handleCsvExport = () => {
+        const queryParams = new URLSearchParams();
+        
+        // values内の空ではない検索条件をループでパラメータにセット
+        Object.entries(values).forEach(([key, value]) => {
+            if (value) {
+                queryParams.append(key, String(value));
+            }
+        });
+        
+        // CSV出力用の識別フラグを追加
+        queryParams.append('export', 'csv');
+        
+        // ファイルダウンロードを実行
+        window.location.href = `/admin/reservations?${queryParams.toString()}`;
+    };
+
+    // ⭕️ PDF出力ハンドラ（現在の検索条件を引き継ぎ、別タブで開く）
+    const handlePdfExport = () => {
+        const queryParams = new URLSearchParams();
+        
+        // values内の空ではない検索条件をループでパラメータにセット
+        Object.entries(values).forEach(([key, value]) => {
+            if (value) {
+                queryParams.append(key, String(value));
+            }
+        });
+        
+        // PDF出力用の識別フラグを追加
+        queryParams.append('export', 'pdf');
+        
+        // PDFはブラウザの別タブで綺麗にプレビュー表示させるのが一般的なため、_blank で開きます
+        window.open(`/admin/reservations?${queryParams.toString()}`, '_blank');
     };
 
     return (
@@ -229,6 +266,33 @@ export default function AdminReservationList({ reservations, filters }: Props) {
                             </form>
                         </div>
                     )}
+                </div>
+
+                {/* ⭕️ 一覧行の上の操作エリア（CSV出力 ＆ PDF出力を横並びで配置） */}
+                <div className="flex justify-end items-center gap-2 mb-3">
+                    {/* CSV出力ボタン */}
+                    <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-9 border-slate-200 text-slate-600 hover:bg-slate-50 gap-1.5"
+                        onClick={handleCsvExport}
+                    >
+                        <FileDown className="w-4 h-4 text-emerald-600" />
+                        <span>CSV出力</span>
+                    </Button>
+
+                    {/* PDF出力ボタン */}
+                    <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-9 border-slate-200 text-slate-600 hover:bg-slate-50 gap-1.5"
+                        onClick={handlePdfExport}
+                    >
+                        <FileText className="w-4 h-4 text-rose-600" />
+                        <span>PDF出力</span>
+                    </Button>
                 </div>
 
                 {/* テーブルカード */}

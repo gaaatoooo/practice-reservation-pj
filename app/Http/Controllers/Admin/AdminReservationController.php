@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Room;
@@ -17,7 +18,7 @@ class AdminReservationController extends Controller
 {
     const PAGINATION_COUNT = 10;
 
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         // 検索パラメータの取得
         $searchId = $request->query('reservation_id');
@@ -62,6 +63,22 @@ class AdminReservationController extends Controller
         }
         if (!empty($dateTo)) {
             $query->where('checkout_date', '<=', $dateTo);
+        }
+
+        // 3. 【要件】エクスポート判定
+        if ($request->input('export') === 'csv') {
+            if (!$query->exists()) {
+                return redirect()->back()->with('error', '出力対象のデータが存在しません。');
+            }
+            return $this->exportCsv($query);
+        }
+
+        if ($request->input('export') === 'pdf') {
+            if (!$query->exists()) {
+                // 別タブで開くため、JavaScriptのウィンドウを閉じるかエラー画面を出す
+                abort(404, '出力対象のデータが存在しません。');
+            }
+            return $this->exportPdf($query);
         }
 
         // 検索条件を維持したまま、最新順に取得
@@ -211,5 +228,62 @@ class AdminReservationController extends Controller
 
         return redirect()->back()
             ->with('success', "予約 #{$reservation->id} のチェックイン処理が完了しました。");
+    }
+
+    /**
+     * CSVエクスポート処理
+     */
+    private function exportCsv($query)
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="reservations_' . date('YmdHis') . '.csv"',
+            'Pragma' => 'no-cache', 'Cache-Control' => 'must-revalidate', 'Expires' => '0',
+        ];
+
+        return response()->stream(function () use ($query) {
+            $handle = fopen('php://output', 'w');
+            fwrite($handle, "\xEF\xBB\xBF"); // Excel文字化け防止BOM
+            
+            fputcsv($handle, ['予約ID', '宿泊者名', '部屋名', 'プラン名', 'チェックイン', 'チェックアウト', '合計金額', 'ステータス']);
+
+            $query->latest('id')->chunk(500, function ($reservations) use ($handle) {
+                foreach ($reservations as $res) {
+                    fputcsv($handle, [
+                        $res->id,
+                        $res->user?->name ?? '不明',
+                        $res->room?->name ?? '不明',
+                        $res->plan?->name ?? 'なし',
+                        $res->reservation_start_date,
+                        $res->reservation_end_date,
+                        $res->total_price,
+                        $res->status == 1 ? '確定' : 'キャンセル済',
+                    ]);
+                }
+            });
+            fclose($handle);
+        }, 200, $headers);
+    }
+
+    /**
+     * ⭕️ PDFエクスポート処理（一覧に表示されている内容を出力）
+     */
+    private function exportPdf($query)
+    {
+        $reservations = $query->with(['room','plan','user'])->latest('id')->get();
+
+        log::alert($reservations);
+
+        // ⭕️ ファサードを使わず、サービスコンテナからラッパーを直接生成する
+        $pdf = app()->make('dompdf.wrapper');
+        
+        // ビューとデータをロード
+        $pdf->loadView('pdf.reservations', compact('reservations'))->setOption(['defaultFont' => 'ipaexg', 'isHtml5ParserEnabled' => true]);
+
+        // A4縦サイズに指定
+        $pdf->setPaper('A4', 'portrait');
+
+        // ブラウザ上でプレビュー表示
+        return $pdf->stream('reservation_list_' . date('YmdHis') . '.pdf');
     }
 }
