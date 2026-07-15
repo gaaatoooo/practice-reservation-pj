@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 type HotelDetail = {
     postal_code: string;
@@ -19,6 +19,8 @@ type HotelDetail = {
 export default function HotelInfoPage() {
     const [info, setInfo] = useState<HotelDetail | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    const accessRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         fetch('/api/hotel-info')
@@ -41,6 +43,18 @@ export default function HotelInfoPage() {
                 setIsLoading(false);
             });
     }, []);
+
+    useEffect(() => {
+        if (!isLoading && window.location.hash === '#access' && accessRef.current) {
+            // 少しだけ実行を遅らせる（DOMのレンダリング確定を待つため）
+            setTimeout(() => {
+                accessRef.current?.scrollIntoView({
+                    behavior: 'smooth', // ふんわりとスムーズにスクロール
+                    block: 'start'      // 要素の先頭が画面の上端にくるように移動
+                });
+            }, 100);
+        }
+    }, [isLoading]);
 
     // ⭕️ テキスト内の「\n」という文字列を本物の改行に安全に変換するヘルパー関数
     const formatText = (text: string | null | undefined) => {
@@ -117,14 +131,6 @@ export default function HotelInfoPage() {
                             </div>
                         </div>
 
-                        {/* 3. 交通アクセス */}
-                        <div className="space-y-3 pt-6 border-t border-neutral-100">
-                            <h2 className="text-lg font-bold text-neutral-900">交通アクセス</h2>
-                            <div className="text-base text-neutral-700 leading-relaxed whitespace-pre-wrap font-medium">
-                                {formatText(info.access_info)}
-                            </div>
-                        </div>
-
                         {/* 4. 駐車場のご案内 */}
                         <div className="space-y-3 pt-6 border-t border-neutral-100">
                             <h2 className="text-lg font-bold text-neutral-900">駐車場のご案内</h2>
@@ -156,7 +162,40 @@ export default function HotelInfoPage() {
                                 {formatText(info.amenities)}
                             </div>
                         </div>
+                        {/* 3. 交通アクセス */}
+                        <div ref={accessRef} id="access" className="space-y-4 pt-6 border-t border-neutral-100 scroll-mt-6">
+                            <h2 className="text-lg font-bold text-neutral-900">交通アクセス</h2>
+                            
+                            {/* アクセス文章のテキスト */}
+                            <div className="text-base text-neutral-700 leading-relaxed whitespace-pre-wrap font-medium">
+                                {formatText(info.access_info)}
+                            </div>
 
+                            {/* ⭕️ Googleマップ埋め込みコンテナ */}
+                            <div className="w-full mt-4 overflow-hidden rounded-xl border border-neutral-200 shadow-sm bg-neutral-50">
+                                <div className="relative w-full h-0 pb-[56.25%] sm:pb-[45%]">
+                                <iframe
+                                    title="Google Map - Hotel Location"
+                                    src={`https://maps.google.com/maps?q=${encodeURIComponent(info.address || '北海道札幌市')}&t=&z=15&ie=UTF8&iwloc=B&output=embed`}
+                                    className="absolute top-0 left-0 w-full h-full border-0"
+                                    allowFullScreen={false}
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer"
+                                />
+                                </div>
+                                <div className="bg-neutral-50 px-4 py-2.5 border-t border-neutral-100 flex justify-between items-center text-xs text-neutral-500 font-medium">
+                                    <span>📍 {info.address || '住所情報が登録されていません'}</span>
+                                    <a 
+                                        href={`https://google.com{encodeURIComponent(info.address || '')}`}
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-700 font-bold hover:underline shrink-0 ml-4"
+                                    >
+                                        大きな地図で見る &rarr;
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

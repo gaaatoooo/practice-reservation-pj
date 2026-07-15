@@ -56,7 +56,12 @@ export default function HeroBanner() {
                         >
                             館内施設
                         </Link>
-                        <span className="hover:text-amber-400 transition-colors cursor-pointer">アクセス</span>
+                        <Link 
+                            href="/user/hotel-info#access" 
+                            className="hover:text-amber-400 transition-colors cursor-pointer"
+                        >
+                            アクセス
+                        </Link>
                     </div>
                 </div>
             </div>
