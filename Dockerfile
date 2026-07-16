@@ -2,11 +2,13 @@ FROM php:8.3-apache
 
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    libzip-dev \
+    unzip \
     gnupg \
     curl \
     && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
-    && docker-php-ext-install pdo pdo_pgsql \
+    && docker-php-ext-install pdo pdo_pgsql zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
