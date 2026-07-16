@@ -1,12 +1,15 @@
-# 1. PHPとApache（Webサーバー）がセットになった本番用の環境ベース
+# 1. PHP 8.3 と Apache がセットになった本番用の環境ベース
 FROM php:8.3-apache
 
-# 2. PostgreSQL接続と必要な拡張機能、Node.jsのインストール
+# 2. 必要なシステムライブラリ（PostgreSQL用など）と、Node.js 18 (LTS) の安全なインストール
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     gnupg \
-    && curl -sL https://nodesource.com | bash - \
-    && apt-get install -y nodejs \
+    curl \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://nodesource.com | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://nodesource.com nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update && apt-get install -y nodejs \
     && docker-php-ext-install pdo pdo_pgsql
 
 # 3. Apacheの設定（Laravelのpublicフォルダを公開するように書き換え）
