@@ -1,5 +1,5 @@
 # 1. PHPとApache（Webサーバー）がセットになった本番用の環境ベース
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # 2. PostgreSQL接続と必要な拡張機能、Node.jsのインストール
 RUN apt-get update && apt-get install -y \
