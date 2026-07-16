@@ -33,6 +33,8 @@ COPY . .
 RUN npm run build
 RUN composer dump-autoload --optimize
 
+RUN php artisan storage:link
+
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY docker-entrypoint.sh /usr/local/bin/
