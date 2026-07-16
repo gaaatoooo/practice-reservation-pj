@@ -12,10 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rooms', function (Blueprint $table) {
-            // カラム名変更
-            $table->renameColumn('is_public', 'status');
-        });
+        // Schema::table('rooms', function (Blueprint $table) {
+        //     // カラム名変更
+        //     $table->renameColumn('is_public', 'status');
+        // });
 
         Schema::table('rooms', function (Blueprint $table) {
             // 1. 古いboolean型のデフォルト値定義を一度削除
@@ -45,9 +45,9 @@ return new class extends Migration
             DB::statement('ALTER TABLE rooms ALTER COLUMN status SET DEFAULT FALSE');
         });
 
-        Schema::table('rooms', function (Blueprint $table) {
-            // カラム名変更
-            $table->renameColumn('status', 'is_public');
-        });
+        // Schema::table('rooms', function (Blueprint $table) {
+        //     // カラム名変更
+        //     $table->renameColumn('status', 'is_public');
+        // });
     }
 };
