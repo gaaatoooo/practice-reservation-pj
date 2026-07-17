@@ -37,8 +37,8 @@ export default function ReviewListPage({ reviews = [] }: Props) {
             {/* ヘッダー */}
             <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
                 <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link href="/mypage" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                        ← マイページへ戻る
+                    <Link href="/user/dashboard" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                        ← ダッシュボードへ戻る
                     </Link>
                 </div>
             </header>

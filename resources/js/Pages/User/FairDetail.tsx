@@ -95,8 +95,8 @@ export default function FairShow({ fair }: Props) {
                         こちらの限定フェア・特別プランでの宿泊予約は、ダッシュボードのカレンダーからいつでもお申し込みいただけます。
                     </div>
                     <Link
-                        href="/user/dashboard"
-                        className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-lg hover:bg-blue-700 shadow-sm transition-colors whitespace-nowrap self-end sm:self-auto"
+                        href="/user/reservation"
+                        className="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-bold text-xs sm:text-sm rounded-lg hover:bg-indigo-700 shadow-sm transition-colors whitespace-nowrap self-end sm:self-auto"
                     >
                         空室状況を見て予約する
                     </Link>
