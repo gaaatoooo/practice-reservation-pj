@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function Index({ members, filters, status, error }: Props) {
-    const [isSearchOpen, setIsSearchOpen] = useState(!!(filters?.name || filters?.tel || filters?.status));
+    const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [searchName, setSearchName] = useState(filters?.name || '');
     const [searchTel, setSearchTel] = useState(filters?.tel || '');
     const [searchStatus, setSearchStatus] = useState(filters?.status || ''); // ⭕️ ステータス用ステート
@@ -78,7 +78,7 @@ export default function Index({ members, filters, status, error }: Props) {
                         <h1 className="text-md font-bold tracking-tight">会員管理</h1>
                     </div>
                     <Link href="/admin/dashboard" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                        &larr; ダッシュボードへ戻る
+                        ダッシュボードへ戻る &rarr;
                     </Link>
                 </div>
             </header>
@@ -87,7 +87,6 @@ export default function Index({ members, filters, status, error }: Props) {
                 <div className="flex flex-col gap-6 w-full">
                     <div className="flex items-start justify-between">
                         <div>
-                            <h1 className="text-xl font-bold tracking-tight text-slate-900">会員一覧</h1>
                             <p className="text-xs text-slate-500 mt-1">会員ユーザーの検索、詳細編集、および強制退会処理を行います。</p>
                         </div>
                     </div>
@@ -106,11 +105,11 @@ export default function Index({ members, filters, status, error }: Props) {
                                 <form onSubmit={handleSearch} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                         <div>
-                                            <label className="block text-xs font-bold text-slate-500 mb-1">氏名（あいまい検索）</label>
+                                            <label className="block text-xs font-bold text-slate-500 mb-1">氏名</label>
                                             <Input type="text" placeholder="山田 太郎" className="h-9 text-xs" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-bold text-slate-500 mb-1">電話番号（あいまい検索）</label>
+                                            <label className="block text-xs font-bold text-slate-500 mb-1">電話番号</label>
                                             <Input type="text" placeholder="09012345678" className="h-9 text-xs" value={searchTel} onChange={(e) => setSearchTel(e.target.value)} />
                                         </div>
                                         {/* ⭕️ ステータス検索項目を追加 */}

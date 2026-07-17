@@ -15,7 +15,7 @@ class StorePlanRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'description' => 'required|string|max:10000', // ⭕️ description に修正
+            'description' => 'required|string|max:1000', // ⭕️ description に修正
             'price' => 'required|integer',
             'status' => 'required|integer|in:1,2,3',
         ];
@@ -26,8 +26,10 @@ class StorePlanRequest extends FormRequest
         return [
             'name.required' => 'プラン名は必須項目です。',
             'name.max' => 'プラン名は255文字以内で入力してください。',
-            'description.required' => 'プラン内容は必須項目です。',
+            'description.required' => '内容は必須項目です。',
+            'description.max' => '内容は1000文字以内で入力してください。',
             'price.required' => '価格は必須項目です。',
+            'price.integer' => '価格は数字を入力してください。',
             'status.required' => 'ステータスは必須項目です。'
         ];
     }

@@ -77,7 +77,6 @@ export default function AdminPlanList({ plans, statusList = {} }: Props) {
                 {/* タイトルと新規作成ボタン */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">プラン告知管理一覧</h2>
                         <p className="text-sm text-slate-500 mt-1">
                             期間限定宿泊プランなどの作成・編集・掲載制御を行います。
                         </p>

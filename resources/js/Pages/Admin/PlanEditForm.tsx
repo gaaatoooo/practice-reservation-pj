@@ -46,7 +46,6 @@ export default function AdminPlanEditForm({ plan, statusList = {} }: Props) {
 
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">フェア・プランの編集</h2>
                     <p className="text-sm text-slate-500 mt-1">
                         プラン内容を修正し、上書き保存します。
                     </p>
@@ -56,7 +55,7 @@ export default function AdminPlanEditForm({ plan, statusList = {} }: Props) {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* プラン名 */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェアタイトル</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">プラン名</label>
                             <input
                                 type="text"
                                 value={data.name}
@@ -70,7 +69,7 @@ export default function AdminPlanEditForm({ plan, statusList = {} }: Props) {
 
                         {/* プラン内容 (description) */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">プラン内容</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">内容</label>
                             <textarea
                                 value={data.description}
                                 onChange={(e) => setData('description', e.target.value)}

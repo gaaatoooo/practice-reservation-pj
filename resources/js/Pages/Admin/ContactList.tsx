@@ -96,7 +96,6 @@ export default function AdminContactList({ contacts, filters = {} }: Props) {
             <main className="max-w-6xl mx-auto px-4 py-8">
                 {/* ページタイトル */}
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">受信お問合せ一覧</h2>
                     <p className="text-sm text-slate-500 mt-1">ユーザーから送信されたお問合せ内容の確認および管理を行います。</p>
                 </div>
 

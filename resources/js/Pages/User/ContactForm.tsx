@@ -58,7 +58,7 @@ export default function ContactForm({ inputs }: Props) {
                     </div>
 
                     <div>
-                    <label className="block text-sm font-bold text-neutral-700 mb-1.5">お問い合わせ内容（本文）</label>
+                    <label className="block text-sm font-bold text-neutral-700 mb-1.5">お問い合わせ内容</label>
                         <textarea
                             value={data.content}
                             onChange={(e) => setData('content', e.target.value)}

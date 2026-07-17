@@ -8,6 +8,7 @@ interface Room {
     price: number; // 1泊単価
     capacity: number;   // 定員
     reviews_avg_rating: number | null; // ⭕️ バックエンドから届く平均値
+    image_url: string;
 }
 
 interface Props {
@@ -60,7 +61,13 @@ export default function RoomList({ rooms }: Props) {
                                 >
                                     {/* 画像プレースホルダー */}
                                     <div className="h-48 bg-gray-100 flex items-center justify-center text-gray-400 text-sm group-hover:bg-gray-200/70 transition-colors">
-                                        No Image (Room App)
+                                        <img
+                                            src={
+                                                room.image_url ? `/storage/${room.image_url.replace(/^\//, '')}` : '/storage/img/default.png'
+                                                }
+                                            alt={room.name}
+                                            className="w-full h-full object-cover object-center"
+                                        />
                                     </div>
                                     
                                     <div className="p-5 flex-1 flex flex-col justify-between">

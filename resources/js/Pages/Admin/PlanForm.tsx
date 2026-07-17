@@ -40,7 +40,6 @@ export default function AdminPlanForm({statusList = {}}: Props) {
 
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">新しいプランの作成</h2>
                     <p className="text-sm text-slate-500 mt-1">
                         期間限定プランの情報を入力して公開または下書き保存します。
                     </p>
@@ -66,7 +65,7 @@ export default function AdminPlanForm({statusList = {}}: Props) {
 
                         {/* プラン内容 (description) */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">プラン内容</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">内容</label>
                             <textarea
                                 value={data.description}
                                 onChange={(e) => setData('description', e.target.value)}

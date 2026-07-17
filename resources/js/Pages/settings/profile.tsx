@@ -66,11 +66,10 @@ export default function Profile({
                                     className="mt-1 block w-full"
                                     defaultValue={auth.user.name}
                                     name="name"
-                                    required
                                     autoComplete="name"
                                     placeholder="山田 太郎"
                                 />
-                                <InputError className="mt-2" message={errors.name} />
+                                {errors.name && <p className="text-xs font-medium text-rose-600 mt-0.5">{errors.name}</p>}
                             </div>
 
                             {/* メールアドレス */}
@@ -82,11 +81,10 @@ export default function Profile({
                                     className="mt-1 block w-full"
                                     defaultValue={auth.user.email}
                                     name="email"
-                                    required
                                     autoComplete="username"
                                     placeholder="example@example.com"
                                 />
-                                <InputError className="mt-2" message={errors.email} />
+                                {errors.email && <p className="text-xs font-medium text-rose-600 mt-0.5">{errors.email}</p>}
                             </div>
 
                             {/* ⭕️ 追加：電話番号 */}
@@ -98,10 +96,9 @@ export default function Profile({
                                     className="mt-1 block w-full"
                                     defaultValue={auth.user.tel || ''}
                                     name="tel"
-                                    required
                                     placeholder="09012345678"
                                 />
-                                <InputError className="mt-2" message={errors.tel} />
+                                {errors.tel && <p className="text-xs font-medium text-rose-600 mt-0.5">{errors.tel}</p>}
                             </div>
 
                             {/* ⭕️ 追加：郵便番号 */}
@@ -113,10 +110,9 @@ export default function Profile({
                                     className="mt-1 block w-full"
                                     defaultValue={auth.user.zip || ''}
                                     name="zip"
-                                    required
                                     placeholder="1000001"
                                 />
-                                <InputError className="mt-2" message={errors.zip} />
+                                {errors.zip && <p className="text-xs font-medium text-rose-600 mt-0.5">{errors.zip}</p>}
                             </div>
 
                             {/* ⭕️ 追加：住所 */}
@@ -128,10 +124,9 @@ export default function Profile({
                                     className="mt-1 block w-full"
                                     defaultValue={auth.user.address || ''}
                                     name="address"
-                                    required
                                     placeholder="東京都千代田区大手町1-1-1"
                                 />
-                                <InputError className="mt-2" message={errors.address} />
+                                {errors.address && <p className="text-xs font-medium text-rose-600 mt-0.5">{errors.address}</p>}
                             </div>
 
                             {/* ⭕️ 追加：性別 */}
@@ -141,7 +136,6 @@ export default function Profile({
                                     id="sex"
                                     name="sex"
                                     defaultValue={auth.user.sex || ''}
-                                    required
                                     className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     <option value="" disabled>選択してください</option>
@@ -149,7 +143,7 @@ export default function Profile({
                                     <option value="2">女性</option>
                                     <option value="3">その他 / 回答しない</option>
                                 </select>
-                                <InputError className="mt-2" message={errors.sex} />
+                                {errors.sex && <p className="text-xs font-medium text-rose-600 mt-0.5">{errors.sex}</p>}
                             </div>
 
                             {/* ⭕️ 追加：生年月日 */}
@@ -161,9 +155,8 @@ export default function Profile({
                                     className="mt-1 block w-full"
                                     defaultValue={auth.user.birthday || ''}
                                     name="birthday"
-                                    required
                                 />
-                                <InputError className="mt-2" message={errors.birthday} />
+                                {errors.birthday && <p className="text-xs font-medium text-rose-600 mt-0.5">{errors.birthday}</p>}
                             </div>
 
                             {/* メールアドレスの未検証警告テキスト（日本語化） */}

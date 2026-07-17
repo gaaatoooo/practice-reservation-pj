@@ -64,7 +64,7 @@ export function AppSidebar() {
             icon: Megaphone,
         },
         {
-            title: 'フェア・プラン告知',
+            title: 'フェア一覧',
             href: '/user/fairs',
             icon: Sparkles,
         },
@@ -74,7 +74,7 @@ export function AppSidebar() {
             icon: Mail,
         },
         {
-            title: '口コミ投稿',
+            title: 'レビュー投稿',
             href: '/user/review',
             icon: Star,
         },
@@ -138,7 +138,7 @@ export function AppSidebar() {
             icon: ShieldCheck,
         },
         {
-            title: '口コミ一覧',
+            title: 'レビュー一覧',
             href: '/admin/reviews',
             icon: Star,
         },

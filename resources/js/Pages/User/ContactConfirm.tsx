@@ -1,14 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import React from 'react';
 
-// interface Props {
-//     inputs: {
-//         title: string;
-//         email: string;
-//         content: string;
-//     };
-// }
-
 type Props = {
     inputs: {
         title: string;

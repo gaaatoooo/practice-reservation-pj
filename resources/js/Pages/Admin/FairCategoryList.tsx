@@ -116,7 +116,7 @@ export default function AdminFairCategoryList({ categories }: Props) {
 
             {/* 管理画面専用ヘッダー */}
             <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-10 text-white">
-                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="bg-emerald-600 text-xs px-2 py-0.5 rounded font-bold tracking-wider">ADMIN</span>
                         <h1 className="text-md font-bold tracking-tight">フェアカテゴリ管理</h1>
@@ -128,7 +128,7 @@ export default function AdminFairCategoryList({ categories }: Props) {
             </header>
 
             {/* メインコンテンツエリア */}
-            <main className="max-w-4xl mx-auto px-4 py-8 space-y-4">
+            <main className="max-w-6xl mx-auto px-4 py-8 space-y-4">
                 
                 {/* ⭕️ ローカルステートで確実に制御・表示する通知バー */}
                 {flashMessage && (
@@ -139,9 +139,8 @@ export default function AdminFairCategoryList({ categories }: Props) {
                 )}
 
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">フェアカテゴリマスタ</h2>
                     <p className="text-sm text-slate-500 mt-1">
-                        フェア・プラン告知機能（フェア一覧）の分類に使用するマスタデータの管理画面です。
+                        フェアの分類に使用するマスタデータの管理画面です。
                     </p>
                 </div>
 

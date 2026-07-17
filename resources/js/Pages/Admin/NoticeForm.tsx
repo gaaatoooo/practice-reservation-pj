@@ -39,7 +39,7 @@ export default function AdminNoticeForm({ categories, statusList = {} }: Props) 
                 <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="bg-emerald-600 text-xs px-2 py-0.5 rounded font-bold tracking-wider">ADMIN</span>
-                        <h1 className="text-md font-bold tracking-tight">お知らせ掲載</h1>
+                        <h1 className="text-md font-bold tracking-tight">お知らせ登録</h1>
                     </div>
                     <Link href="/admin/notices" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                         &larr; 管理一覧へ戻る
@@ -50,9 +50,8 @@ export default function AdminNoticeForm({ categories, statusList = {} }: Props) 
             {/* メインコンテンツエリア */}
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">新しいお知らせの作成</h2>
                     <p className="text-sm text-slate-500 mt-1">
-                        館内案内やイベント情報などを入力して公開または下書き保存します。
+                        館内案内やイベント情報などを保存します。
                     </p>
                 </div>
 

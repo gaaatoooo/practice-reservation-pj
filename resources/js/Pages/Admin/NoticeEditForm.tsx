@@ -60,9 +60,8 @@ export default function AdminNoticeEditForm({ notice, categories, statusList = {
             {/* メインコンテンツエリア */}
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">お知らせの編集・変更</h2>
                     <p className="text-sm text-slate-500 mt-1">
-                        掲載中、または下書き状態のお知らせ内容を修正し、上書き保存します。
+                        お知らせ内容を修正し、上書き保存します。
                     </p>
                 </div>
 

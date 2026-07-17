@@ -23,5 +23,6 @@ class Room extends Model
         'price',
         'capacity',
         'status',
+        'total_rooms'
     ];
 }

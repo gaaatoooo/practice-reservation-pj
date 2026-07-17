@@ -116,7 +116,7 @@ export default function AdminReservationList({ reservations, filters }: Props) {
                 <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="bg-emerald-600 text-xs px-2 py-0.5 rounded font-bold tracking-wider">ADMIN</span>
-                        <h1 className="text-md font-bold tracking-tight">宿泊予約システム 管理統括</h1>
+                        <h1 className="text-md font-bold tracking-tight">予約管理</h1>
                     </div>
                     <Link href="/admin/dashboard" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                         ダッシュボードへ戻る &rarr;
@@ -129,7 +129,6 @@ export default function AdminReservationList({ reservations, filters }: Props) {
                 {/* タイトルと件数表示 */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">予約管理一覧</h2>
                         <p className="text-sm text-slate-500 mt-1">
                             登録されているすべての予約・キャンセル履歴の検索および管理を行います。
                             <span className="ml-2 text-slate-700 font-semibold">

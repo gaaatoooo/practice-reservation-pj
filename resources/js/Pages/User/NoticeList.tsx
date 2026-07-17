@@ -49,7 +49,7 @@ export default function NoticeListPage() {
 
             {/* ヘッダー */}
             <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/user/dashboard" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
                         ← ダッシュボードへ戻る
                     </Link>
@@ -57,7 +57,7 @@ export default function NoticeListPage() {
             </header>
 
             {/* メインコンテンツエリア */}
-            <main className="max-w-4xl mx-auto px-4 py-8">
+            <main className="max-w-5xl mx-auto px-4 py-8">
                 <div className="mb-6">
                     <h2 className="text-2xl font-bold tracking-tight text-gray-900">お知らせ一覧</h2>
                     <p className="text-sm text-gray-500 mt-1">ホテルの最新ニュースや、館内施設のご案内などを掲載しております。</p>

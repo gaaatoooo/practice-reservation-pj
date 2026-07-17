@@ -61,7 +61,7 @@ export default function Index({ admins, status, error }: Props) {
                         <h1 className="text-md font-bold tracking-tight">管理者管理</h1>
                     </div>
                     <Link href="/admin/dashboard" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                        &larr; ダッシュボードへ戻る
+                        ダッシュボードへ戻る &rarr;
                     </Link>
                 </div>
             </header>
@@ -72,7 +72,6 @@ export default function Index({ admins, status, error }: Props) {
                     {/* ⭕️ 画面タイトル・説明＆新規登録ボタン */}
                     <div className="flex items-start justify-between">
                         <div>
-                            <h1 className="text-xl font-bold tracking-tight text-slate-900">管理者一覧</h1>
                             <p className="text-xs text-slate-500 mt-1">管理ユーザーの作成・編集・アカウント制御を行います。</p>
                         </div>
                         <Link

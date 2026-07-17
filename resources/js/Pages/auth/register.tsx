@@ -1,5 +1,4 @@
 import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -33,17 +32,13 @@ export default function Register({ passwordRules }: Props) {
                                 <Input
                                     id="name"
                                     type="text"
-                                    required
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
                                     placeholder="山田 太郎"
                                 />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
+                                {errors.name && <p className="text-xs text-rose-600 font-medium mt-1">{errors.name}</p>}
                             </div>
 
                             {/* メールアドレス入力欄 */}
@@ -52,13 +47,12 @@ export default function Register({ passwordRules }: Props) {
                                 <Input
                                     id="email"
                                     type="email"
-                                    required
                                     tabIndex={2}
                                     autoComplete="email"
                                     name="email"
                                     placeholder="example@email.com"
                                 />
-                                <InputError message={errors.email} />
+                                {errors.email && <p className="text-xs text-rose-600 font-medium mt-1">{errors.email}</p>}
                             </div>
 
                             {/* パスワード入力欄 */}
@@ -66,14 +60,13 @@ export default function Register({ passwordRules }: Props) {
                                 <Label htmlFor="password">パスワード</Label>
                                 <PasswordInput
                                     id="password"
-                                    required
                                     tabIndex={3}
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="パスワードを入力"
                                     passwordrules={passwordRules}
                                 />
-                                <InputError message={errors.password} />
+                                {errors.password && <p className="text-xs text-rose-600 font-medium mt-1">{errors.password}</p>}
                             </div>
 
                             {/* パスワード確認入力欄 */}
@@ -83,16 +76,13 @@ export default function Register({ passwordRules }: Props) {
                                 </Label>
                                 <PasswordInput
                                     id="password_confirmation"
-                                    required
                                     tabIndex={4}
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="パスワードを再入力"
                                     passwordrules={passwordRules}
                                 />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
+                                {errors.password_confirmation && <p className="text-xs text-rose-600 font-medium mt-1">{errors.password_confirmation}</p>}
                             </div>
 
                             {/* 1. 郵便番号入力欄 */}
@@ -102,10 +92,9 @@ export default function Register({ passwordRules }: Props) {
                                     id="zip"
                                     type="text"
                                     name="zip"
-                                    required
                                     placeholder="1000000"
                                 />
-                                <InputError message={errors.zip} />
+                                {errors.zip && <p className="text-xs text-rose-600 font-medium mt-1">{errors.zip}</p>}
                             </div>
 
                             {/* 1. 住所入力欄 */}
@@ -115,10 +104,9 @@ export default function Register({ passwordRules }: Props) {
                                     id="address"
                                     type="text"
                                     name="address"
-                                    required
                                     placeholder="東京都渋谷区神南1-2-3"
                                 />
-                                <InputError message={errors.address} />
+                                {errors.address && <p className="text-xs text-rose-600 font-medium mt-1">{errors.address}</p>}
                             </div>
 
                             {/* 2. 電話番号入力欄 */}
@@ -128,10 +116,9 @@ export default function Register({ passwordRules }: Props) {
                                     id="tel"
                                     type="tel"
                                     name="tel"
-                                    required
                                     placeholder="09012345678"
                                 />
-                                <InputError message={errors.tel} />
+                                {errors.tel && <p className="text-xs text-rose-600 font-medium mt-1">{errors.tel}</p>}
                             </div>
 
                             {/* 3. 生年月日入力欄 */}
@@ -141,9 +128,8 @@ export default function Register({ passwordRules }: Props) {
                                     id="birthday"
                                     type="date"
                                     name="birthday"
-                                    required
                                 />
-                                <InputError message={errors.birthday} />
+                                {errors.birthday && <p className="text-xs text-rose-600 font-medium mt-1">{errors.birthday}</p>}
                             </div>
 
                             {/* 4. 性別選択欄（セレクトボックスまたはラジオ形式。ここではシンプルなセレクト仕様） */}
@@ -152,7 +138,6 @@ export default function Register({ passwordRules }: Props) {
                                 <select
                                     id="sex"
                                     name="sex"
-                                    required
                                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                 >
                                     <option value="" disabled selected hidden>性別を選択してください</option>
@@ -160,7 +145,7 @@ export default function Register({ passwordRules }: Props) {
                                     <option value="2">女性</option>
                                     <option value="3">その他 / 回答しない</option>
                                 </select>
-                                <InputError message={errors.sex} />
+                                {errors.sex && <p className="text-xs text-rose-600 font-medium mt-1">{errors.sex}</p>}
                             </div>
 
                             {/* アカウント作成ボタン */}

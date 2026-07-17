@@ -57,7 +57,6 @@ export default function AdminRoomEditForm({ room, statusList = {} }: Props) {
 
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">部屋の編集</h2>
                     <p className="text-sm text-slate-500 mt-1">
                         部屋情報を修正し、上書き保存します。
                     </p>

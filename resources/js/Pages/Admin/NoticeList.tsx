@@ -122,7 +122,6 @@ export default function AdminNoticeList({ notices, filters = {}, categories, sta
                 {/* タイトルと新規作成ボタン */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">お知らせ管理一覧</h2>
                         <p className="text-sm text-slate-500 mt-1">
                             館内案内、イベント告知、重要なお知らせの作成・編集・掲載制御を行います。
                         </p>

@@ -42,11 +42,11 @@ export default function FairListPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 antialiased">
-            <Head title="フェア・特別プラン一覧" />
+            <Head title="フェア一覧" />
 
             {/* ヘッダー */}
             <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/user/dashboard" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
                         ← ダッシュボードへ戻る
                     </Link>
@@ -54,9 +54,9 @@ export default function FairListPage() {
             </header>
 
             {/* メメインコンテンツエリア */}
-            <main className="max-w-4xl mx-auto px-4 py-8">
+            <main className="max-w-5xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">フェア・特別プラン一覧</h2>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">フェア一覧</h2>
                     <p className="text-sm text-gray-500 mt-1">当ホテルが自信を持ってお届けする、期間限定のイベントや優待プランのご案内です。</p>
                 </div>
 

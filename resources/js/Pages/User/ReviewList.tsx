@@ -36,7 +36,7 @@ export default function ReviewListPage({ reviews = [] }: Props) {
 
             {/* ヘッダー */}
             <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/mypage" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
                         ← マイページへ戻る
                     </Link>
@@ -44,7 +44,7 @@ export default function ReviewListPage({ reviews = [] }: Props) {
             </header>
 
             {/* メインコンテンツエリア */}
-            <main className="max-w-4xl mx-auto px-4 py-8">
+            <main className="max-w-5xl mx-auto px-4 py-8">
                 
                 {/* ⭕️ タイトルエリアと新規投稿ボタンを横並びに配置（UI規約完全同期） */}
                 <div className="flex items-start justify-between mb-6 gap-4">

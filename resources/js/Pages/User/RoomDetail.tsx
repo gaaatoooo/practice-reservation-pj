@@ -22,7 +22,7 @@ export default function RoomDetail({ room, averageRating }: Props) {
 
             {/* ヘッダー */}
             <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/user/rooms" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
                         ← お部屋一覧へ戻る
                     </Link>
@@ -30,7 +30,7 @@ export default function RoomDetail({ room, averageRating }: Props) {
             </header>
 
             {/* メインコンテンツエリア */}
-            <main className="max-w-4xl mx-auto px-4 py-8">
+            <main className="max-w-5xl mx-auto px-4 py-8">
                 <div className="bg-white border border-gray-200 rounded-xl overflow-hidden p-6 md:p-8 shadow-sm">
                     {/* ⭕️ 部屋名と評価値を横並びに配置 */}
                     <div className="flex flex-wrap items-baseline gap-3 mb-4">

@@ -30,7 +30,7 @@ export default function FairShow({ fair }: Props) {
         } else if (referrer.includes('/user/fairs')) {
             // ユーザー側のフェア一覧から遷移してきた場合（明示的指定）
             setBackUrl('/user/fairs');
-            setBackLabel('フェア・プラン一覧へ戻る');
+            setBackLabel('フェア一覧へ戻る');
         }
     }, []);
 
@@ -50,17 +50,19 @@ export default function FairShow({ fair }: Props) {
     };
 
     return (
-        <>
+        <div className="min-h-screen bg-gray-50 text-gray-900 antialiased">
             <Head title={fair.title} />
-            <div className="p-6 max-w-3xl mx-auto flex flex-col gap-6 py-12">
-                {/* 戻るリンクをお知らせのトーンに完全統一 */}
-                <Link 
-                    href={backUrl} 
-                    className="text-sm font-medium text-neutral-500 hover:text-blue-600 transition-colors self-start flex items-center gap-1"
-                >
-                    ← {backLabel}
-                </Link>
 
+            {/* ヘッダー */}
+            <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <Link href={backUrl} className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                        ← {backLabel}
+                    </Link>
+                </div>
+            </header>
+
+            <main className="max-w-5xl mx-auto px-4 py-8">
                 {/* ヘッダー領域（タグを廃止し、日付とお名前のみのシンプルな構成へ） */}
                 <div className="flex flex-col gap-3 border-b pb-6">
                     <div className="flex items-center text-sm">
@@ -99,7 +101,7 @@ export default function FairShow({ fair }: Props) {
                         空室状況を見て予約する
                     </Link>
                 </div>
-            </div>
-        </>
+            </main>
+        </div>
     );
 }

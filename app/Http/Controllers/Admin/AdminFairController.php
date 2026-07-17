@@ -8,6 +8,7 @@ use App\Models\Fair;
 use App\Http\Requests\Admin\StoreFairRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -84,12 +85,14 @@ class AdminFairController extends Controller
             
             // ファイル名を取得
             $filename = $file->getClientOriginalName();
+
+            $randomDir = Str::random(16);
             
             // storage/app/public/img/ の中へ安全に保存
-            Storage::disk('public')->putFileAs('img/fair', $file, $filename);
+            Storage::disk('public')->putFileAs("img/fair/{$randomDir}", $file, $filename);
             
             // データベースには 'storage/img/〜' の形でパスを保存（artisan storage:link前提）
-            $data['image_url'] = '/img/fair' . $filename;
+            $data['image_url'] = "img/fai/{$randomDir}/" . $filename;
         }
 
         Fair::create($data);
@@ -130,10 +133,11 @@ class AdminFairController extends Controller
 
             $file = $request->file('image');
             $filename = $file->getClientOriginalName();
+            $randomDir = Str::random(16);
             
             // 新しい画像を保存
-            Storage::disk('public')->putFileAs('img/fair', $file, $filename);
-            $data['image_url'] = '/img/fair/' . $filename;
+            Storage::disk('public')->putFileAs("img/fair/{$randomDir}", $file, $filename);
+            $data['image_url'] = "img/fair/{$randomDir}/" . $filename;
         }
 
         $fair->update($data);

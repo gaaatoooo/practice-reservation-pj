@@ -67,21 +67,20 @@ export default function HotelInfoPage() {
     };
 
     return (
-        <>
+        <div className="min-h-screen bg-gray-50 text-gray-900 antialiased">
             <Head title="施設のご案内" />
-            <div className="p-6 max-w-3xl mx-auto flex flex-col gap-8 py-12 text-neutral-900 antialiased">
-                
-                {/* 戻るリンクをお知らせ・フェア詳細と完全同期 */}
-                <Link 
-                    href="/user/dashboard" 
-                    className="text-sm font-medium text-neutral-500 hover:text-blue-600 transition-colors self-start flex items-center gap-1"
-                >
-                    ← ダッシュボードへ戻る
-                </Link>
+            
+            <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <Link href="/user/dashboard" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                        ← ダッシュボードへ戻る
+                    </Link>
+                </div>
+            </header>
 
+            <main className="max-w-5xl mx-auto px-4 py-8">
                 {/* ヘッダー領域 */}
                 <div className="flex flex-col gap-2 border-b pb-6">
-                    <span className="text-xs text-neutral-400 font-mono tracking-wider">HOTEL INFORMATION</span>
                     <h1 className="text-2xl font-black text-neutral-900 leading-snug">
                         施設のご案内
                     </h1>
@@ -164,7 +163,7 @@ export default function HotelInfoPage() {
                         </div>
                         {/* 3. 交通アクセス */}
                         <div ref={accessRef} id="access" className="space-y-4 pt-6 border-t border-neutral-100 scroll-mt-6">
-                            <h2 className="text-lg font-bold text-neutral-900">交通アクセス</h2>
+                            <h2 className="text-lg font-bold text-neutral-900">当館へのアクセス</h2>
                             
                             {/* アクセス文章のテキスト */}
                             <div className="text-base text-neutral-700 leading-relaxed whitespace-pre-wrap font-medium">
@@ -198,7 +197,7 @@ export default function HotelInfoPage() {
                         </div>
                     </div>
                 )}
-            </div>
-        </>
+            </main>
+        </div>
     );
 }

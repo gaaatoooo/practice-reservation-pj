@@ -44,7 +44,7 @@ export default function Edit({ member }: Props) {
                 <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="bg-emerald-600 text-xs px-2 py-0.5 rounded font-bold tracking-wider">ADMIN</span>
-                        <h1 className="text-md font-bold tracking-tight">会員管理</h1>
+                        <h1 className="text-md font-bold tracking-tight">会員編集</h1>
                     </div>
                     <Link href="/admin/members" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                         &larr; 一覧画面へ戻る
@@ -56,7 +56,6 @@ export default function Edit({ member }: Props) {
                 <div className="flex flex-col gap-6 w-full max-w-2xl">
                     {/* タイトルエリアに編集対象の会員名とIDを表示 */}
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight text-slate-900">会員情報編集</h1>
                         <p className="text-xs text-slate-500 mt-1">
                             会員「{member.name} (ID: {member.id})」の登録情報を変更します。
                         </p>

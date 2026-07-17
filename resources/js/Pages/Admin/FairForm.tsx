@@ -40,7 +40,7 @@ export default function AdminFairForm({ categories, statusList = {} }: Props) {
                 <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="bg-emerald-600 text-xs px-2 py-0.5 rounded font-bold tracking-wider">ADMIN</span>
-                        <h1 className="text-md font-bold tracking-tight">フェア掲載</h1>
+                        <h1 className="text-md font-bold tracking-tight">フェア登録</h1>
                     </div>
                     <Link href="/admin/fairs" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                         &larr; 管理一覧へ戻る
@@ -50,9 +50,8 @@ export default function AdminFairForm({ categories, statusList = {} }: Props) {
 
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">新しいフェア・プランの作成</h2>
                     <p className="text-sm text-slate-500 mt-1">
-                        特設フェアや期間限定プランの情報を入力して公開または下書き保存します。
+                        特設フェアや期間限定プランの情報を保存します。
                     </p>
                 </div>
 
@@ -60,7 +59,7 @@ export default function AdminFairForm({ categories, statusList = {} }: Props) {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* フェアタイトル */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェアタイトル</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">タイトル</label>
                             <input
                                 type="text"
                                 value={data.title}
@@ -140,7 +139,7 @@ export default function AdminFairForm({ categories, statusList = {} }: Props) {
 
                         {/* ⭕️ 画像アップロード項目 */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェアのイメージ画像</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェア画像</label>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -150,13 +149,13 @@ export default function AdminFairForm({ categories, statusList = {} }: Props) {
                                     errors.image ? 'border-rose-400 focus:border-rose-500' : 'border-slate-300'
                                 }`}
                             />
-                            <p className="text-xs text-slate-400 mt-1">※ jpeg, png, jpg, webp 形式（2MB以内推奨）</p>
+                            <p className="text-xs text-slate-400 mt-1">※ jpeg, png, jpg, webp 形式（20MB以内推奨）</p>
                             {errors.image && <p className="text-xs text-rose-600 font-medium mt-1">{errors.image}</p>}
                         </div>
 
                         {/* フェア内容 (description) */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェア内容（本文）</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">内容</label>
                             <textarea
                                 value={data.description}
                                 onChange={(e) => setData('description', e.target.value)}

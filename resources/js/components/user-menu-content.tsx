@@ -23,6 +23,8 @@ export function UserMenuContent({ user }: Props) {
         router.flushAll();
     };
 
+    const redirectAfterLogout = user.role === 1 ? '/user/dashboard' : '/login';
+
     return (
         <>
             <DropdownMenuLabel className="p-0 font-normal">
@@ -51,6 +53,7 @@ export function UserMenuContent({ user }: Props) {
                     href={logout()}
                     as="button"
                     onClick={handleLogout}
+                    onSuccess={() => router.visit(redirectAfterLogout)}
                     data-test="logout-button"
                 >
                     <LogOut className="mr-2" />

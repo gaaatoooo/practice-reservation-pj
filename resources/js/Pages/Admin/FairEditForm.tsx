@@ -62,9 +62,8 @@ export default function AdminFairEditForm({ fair, categories, statusList = {} }:
 
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">フェア・プランの編集</h2>
                     <p className="text-sm text-slate-500 mt-1">
-                        掲載中、または下書き状態のフェア内容を修正し、上書き保存します。
+                        フェア内容を修正し、上書き保存します。
                     </p>
                 </div>
 
@@ -72,7 +71,7 @@ export default function AdminFairEditForm({ fair, categories, statusList = {} }:
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* フェアタイトル */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェアタイトル</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">タイトル</label>
                             <input
                                 type="text"
                                 value={data.title}
@@ -151,7 +150,7 @@ export default function AdminFairEditForm({ fair, categories, statusList = {} }:
 
                         {/* ⭕️ 画像アップロード項目 ＆ 登録済みプレビュー */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェアのイメージ画像</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェア画像</label>
                             
                             {/* すでに画像が登録されている場合はプレビューを表示 */}
                             {fair.image_url && (
@@ -180,7 +179,7 @@ export default function AdminFairEditForm({ fair, categories, statusList = {} }:
 
                         {/* フェア内容 (description) */}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1.5">フェア内容（本文）</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1.5">内容</label>
                             <textarea
                                 value={data.description}
                                 onChange={(e) => setData('description', e.target.value)}

@@ -113,7 +113,6 @@ export default function AdminRoomList({ rooms, filters = {}, statusList = {} }: 
                 {/* タイトルと新規作成ボタン */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">部屋管理一覧</h2>
                         <p className="text-sm text-slate-500 mt-1">
                             部屋の作成・編集を行います。
                         </p>

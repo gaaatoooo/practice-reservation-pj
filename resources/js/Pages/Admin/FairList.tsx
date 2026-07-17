@@ -122,7 +122,6 @@ export default function AdminFairList({ fairs, filters = {}, categories, statusL
                 {/* タイトルと新規作成ボタン */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">フェア管理一覧</h2>
                         <p className="text-sm text-slate-500 mt-1">
                             特設フェアなどの作成・編集・掲載制御を行います。
                         </p>

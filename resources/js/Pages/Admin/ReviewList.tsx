@@ -95,7 +95,6 @@ export default function Index({ reviews }: Props) {
                     
                     {/* 画面タイトル・説明 */}
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight text-slate-900">宿泊レビュー一覧</h1>
                         <p className="text-xs text-slate-500 mt-1">ユーザーから投稿されたお部屋・プランに対する評価とご感想の確認を行います。</p>
                     </div>
 

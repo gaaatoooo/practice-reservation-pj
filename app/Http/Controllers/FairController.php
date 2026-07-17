@@ -14,7 +14,18 @@ class FairController extends Controller
      */
     public function index(): JsonResponse
     {
+        $today = now()->toDateString();
+        
         $fairs = Fair::where('status', config('constants.Fair.Status.Published'))
+            ->where(function ($query) use ($today) {
+                $query->whereNull('public_start_date')
+                    ->orWhereDate('public_start_date', '<=', $today);
+            })
+            // 公開終了日：未登録(null)なら無条件でOK、登録されていればシステム日付がその日以前であること
+            ->where(function ($query) use ($today) {
+                $query->whereNull('public_end_date')
+                    ->orWhereDate('public_end_date', '>=', $today);
+            })
             ->orderBy('sort_order', 'asc')
             ->get();
 

@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Http\Requests\Admin\StoreRoomRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -74,11 +75,13 @@ class AdminRoomController extends Controller
             // ファイル名を取得
             $filename = $file->getClientOriginalName();
             
+            $randomDir = Str::random(16);
+
             // storage/app/public/img/ の中へ安全に保存
-            Storage::disk('public')->putFileAs('img/room', $file, $filename);
+            Storage::disk('public')->putFileAs("img/room/{$randomDir}", $file, $filename);
             
             // データベースには 'storage/img/〜' の形でパスを保存（artisan storage:link前提）
-            $data['image_url'] = '/img/room/' . $filename;
+            $data['image_url'] = "img/room/{$randomDir}/" . $filename;
         }
 
         Room::create($data);
@@ -117,10 +120,11 @@ class AdminRoomController extends Controller
 
             $file = $request->file('image');
             $filename = $file->getClientOriginalName();
-            
+            $randomDir = Str::random(16);
+
             // 新しい画像を保存
-            Storage::disk('public')->putFileAs('img/room', $file, $filename);
-            $data['image_url'] = '/img/room/' . $filename;
+            Storage::disk('public')->putFileAs("img/room/{$randomDir}", $file, $filename);
+            $data['image_url'] = "img/room/{$randomDir}/" . $filename;
         }
 
         $room->update($data);
