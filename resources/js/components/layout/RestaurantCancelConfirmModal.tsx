@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface CancelConfirmModalProps {
+interface RestaurantCancelConfirmModalProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
@@ -8,13 +8,13 @@ interface CancelConfirmModalProps {
     reservationId: number;
 }
 
-export default function CancelConfirmModal({
+export default function RestaurantCancelConfirmModal({
     isOpen,
     onClose,
     onConfirm,
     processing,
     reservationId,
-}: CancelConfirmModalProps) {
+}: RestaurantCancelConfirmModalProps) {
     if (!isOpen) {
         return null;
     }
@@ -26,9 +26,9 @@ export default function CancelConfirmModal({
                     予約 #{reservationId} をキャンセルしますか？
                 </h3>
                 <p className="text-sm text-slate-500 leading-relaxed mb-6">
-                    この操作を実行すると、予約がキャンセルされます。この操作は取り消せません。
+                    この操作を実行すると、予約ステータスが「キャンセル済み」に変更されます。この操作は取り消せません。
                 </p>
-                
+
                 <div className="flex justify-end gap-2">
                     <button
                         type="button"

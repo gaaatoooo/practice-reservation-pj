@@ -30,7 +30,7 @@ export default function CancelModal({ targetId, onClose, onConfirm }: ModalProps
                 
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
                     この予約（予約番号: #{targetId}）をキャンセルしてもよろしいですか？<br />
-                    <span className="text-red-500 font-medium mt-1 block">※この操作は取り消しできず、空室は即時開放されます。</span>
+                    <span className="text-red-500 font-medium mt-1 block">※この操作は取り消しできません。</span>
                 </p>
                 
                 <div className="flex justify-end gap-3 text-sm">

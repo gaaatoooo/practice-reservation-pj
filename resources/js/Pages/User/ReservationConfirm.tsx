@@ -77,7 +77,9 @@ export default function ReservationConfirm({ inputs, roomName, planName, roomPri
     };
 
     // 1泊あたりの人数分の小計を安全に計算
-    const pricePerNight = nights > 0 ? (roomPrice + planPrice) * Number(inputs.number) / nights : (roomPrice + planPrice) * Number(inputs.number);
+    const pricePerNight = (roomPrice + planPrice) * Number(inputs.number);
+    const pricePerNumber = (roomPrice + planPrice);
+    const totalNightPrice = (roomPrice + planPrice) * Number(inputs.number) * nights;
 
     return (
         <>
@@ -134,12 +136,6 @@ export default function ReservationConfirm({ inputs, roomName, planName, roomPri
                             <span className="font-medium font-mono">¥{roomPrice?.toLocaleString()}</span>
                         </div>
                         
-                        {/* 宿泊人数 */}
-                        <div className="flex justify-between items-center text-neutral-600 dark:text-neutral-400">
-                            <span>ご宿泊人数</span>
-                            <span className="font-medium">{inputs.number} 名</span>
-                        </div>
-
                         {/* ⭕️ 追記：選択されたプラン料金の明細行（プランが選ばれている場合のみ表示） */}
                         {planPrice >= 0 && (
                             <div className="flex justify-between items-center text-neutral-600 dark:text-neutral-400 animate-in fade-in duration-150">
@@ -150,13 +146,19 @@ export default function ReservationConfirm({ inputs, roomName, planName, roomPri
                             </div>
                         )}
 
+                        {/* 宿泊人数 */}
+                        <div className="flex justify-between items-center text-neutral-600 dark:text-neutral-400">
+                            <span>ご宿泊人数</span>
+                            <span className="font-medium">{inputs.number} 名</span>
+                        </div>
+
                         {/* 1泊あたりの小計 */}
                         <div className="flex justify-between items-center pb-2 border-b border-dashed border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 font-semibold">
                             <span>1泊あたりの小計</span>
                             <span className="font-mono">
                                 ¥{pricePerNight.toLocaleString()} 
                                 <span className="text-xs font-normal text-neutral-400 ml-1">
-                                    （¥{roomPrice?.toLocaleString()} × {inputs.number}名）
+                                    （¥{pricePerNumber?.toLocaleString()} × {inputs.number}名）
                                 </span>
                             </span>
                         </div>
@@ -171,7 +173,7 @@ export default function ReservationConfirm({ inputs, roomName, planName, roomPri
                     {/* 合計金額 */}
                     <div className="p-6 bg-blue-50/50 dark:bg-blue-950/20 rounded-2xl border border-blue-100 dark:border-blue-900/40 flex justify-between items-center">
                         <span className="text-base font-bold text-blue-800 dark:text-blue-400">総合計金額（税込）</span>
-                        <span className="text-3xl font-black text-blue-600 dark:text-blue-400 font-mono">¥{pricePerNight.toLocaleString()}</span>
+                        <span className="text-3xl font-black text-blue-600 dark:text-blue-400 font-mono">¥{totalNightPrice.toLocaleString()}</span>
                     </div>
 
                     {/* 操作ボタン */}

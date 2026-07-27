@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 class StoreRoomRequest extends FormRequest
 {
@@ -14,8 +13,6 @@ class StoreRoomRequest extends FormRequest
 
     public function rules(): array
     {
-        log::alert($this->input());
-
         return [
             'name' => 'required|string|max:255',
             'price' => 'required|integer',

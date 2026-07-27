@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Trash2, Edit3 } from 'lucide-react';
 import React, { useState } from 'react';
 import DeleteConfirmModal from '@/components/layout/admin/DeleteConfirmModal';
+import FlashMessage from '@/components/layout/admin/FlashMessage';
 import Pagination from '@/components/layout/admin/Pagination'; 
 
 interface LinkItem {
@@ -74,11 +75,12 @@ export default function AdminPlanList({ plans, statusList = {} }: Props) {
 
             {/* メインコンテンツエリア */}
             <main className="max-w-6xl mx-auto px-4 py-8">
+                <FlashMessage />
                 {/* タイトルと新規作成ボタン */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <p className="text-sm text-slate-500 mt-1">
-                            期間限定宿泊プランなどの作成・編集・掲載制御を行います。
+                            プランなどの作成・編集・掲載制御を行います。
                         </p>
                     </div>
                     <Link

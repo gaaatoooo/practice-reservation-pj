@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class AdminRoomController extends Controller
 {
@@ -85,7 +86,7 @@ class AdminRoomController extends Controller
         }
 
         Room::create($data);
-        return redirect()->route('admin.rooms.index');
+        return redirect()->route('admin.rooms.index')->with('success', '部屋情報を追加しました。');
     }
 
     /**
@@ -108,6 +109,13 @@ class AdminRoomController extends Controller
     {
         $data = $request->validated();
 
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$room->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'この部屋情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         if ($request->hasFile('image')) {
             // 古い画像があれば Storage 経由で安全に削除
             // データベースに 'storage/img/filename' で入っているため、'img/filename' の形に変換して指定
@@ -128,12 +136,19 @@ class AdminRoomController extends Controller
         }
 
         $room->update($data);
-        return redirect()->route('admin.rooms.index');
+        return redirect()->route('admin.rooms.edit', $room)->with('success', '部屋情報を更新しました。');
     }
 
-    public function destroy(Room $room)
+    public function destroy(Request $request, Room $room)
     {
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$room->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'この部屋情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         $room->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', '部屋情報を削除しました。');
     }
 }

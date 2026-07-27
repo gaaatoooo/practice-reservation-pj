@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import React from 'react';
+import FlashMessage from '@/components/layout/admin/FlashMessage';
 
 interface NoticeItem {
     id: number;
@@ -9,6 +10,7 @@ interface NoticeItem {
     content: string;
     public_start_date: string;
     public_end_date: string;
+    updated_at: string;
 }
 
 interface Props {
@@ -32,6 +34,7 @@ export default function AdminNoticeEditForm({ notice, categories, statusList = {
         content: notice.content,
         public_start_date: notice.public_start_date,
         public_end_date: notice.public_end_date,
+        updated_at: notice.updated_at,
     });
 
     // フォーム送信（PATCHリクエスト）ハンドラ
@@ -59,6 +62,7 @@ export default function AdminNoticeEditForm({ notice, categories, statusList = {
 
             {/* メインコンテンツエリア */}
             <main className="max-w-3xl mx-auto px-4 py-8">
+                <FlashMessage />
                 <div className="mb-6">
                     <p className="text-sm text-slate-500 mt-1">
                         お知らせ内容を修正し、上書き保存します。

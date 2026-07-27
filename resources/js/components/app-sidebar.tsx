@@ -1,6 +1,6 @@
 
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, CalendarDays, Megaphone, Sparkles, Hotel, BedDouble, Mail, Tags, Ticket, ShieldCheck, Star, Flag, User } from 'lucide-react';
+import { BookOpen, FolderGit2, LayoutGrid, CalendarDays, Megaphone, Sparkles, Hotel, BedDouble, Mail, Tags, Ticket, ShieldCheck, Star, Flag, User, Utensils } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -93,9 +93,19 @@ export function AppSidebar() {
             icon: CalendarDays,
         },
         {
+            title: 'レストラン予約管理',
+            href: '/admin/restaurant_reservations',
+            icon: Utensils,
+        },
+        {
             title: "部屋管理",
             href: "/admin/rooms",
             icon: BedDouble,
+        },
+        {
+            title: '施設情報管理',
+            href: '/admin/hotel-detail',
+            icon: Hotel,
         },
         {
             title: 'お知らせ管理',

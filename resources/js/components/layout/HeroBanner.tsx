@@ -45,6 +45,12 @@ export default function HeroBanner() {
                     </div>
                     <div className="hidden sm:flex items-center gap-6 text-xs font-semibold tracking-wider text-slate-200">
                         <Link 
+                            href="/user/restaurant-reservation" 
+                            className="hover:text-amber-400 transition-colors cursor-pointer"
+                        >
+                            レストラン予約・予約確認
+                        </Link>
+                        <Link 
                             href="/user/rooms" 
                             className="hover:text-amber-400 transition-colors cursor-pointer"
                         >

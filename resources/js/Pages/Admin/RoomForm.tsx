@@ -188,7 +188,7 @@ export default function AdminRoomForm({ statusList = {} }: Props) {
                                 disabled={processing}
                                 className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-bold shadow-sm transition-colors disabled:opacity-50"
                             >
-                                {processing ? '掲載処理中...' : 'フェアを確定する'}
+                                {processing ? '登録処理中...' : '確定する'}
                             </button>
                         </div>
                     </form>

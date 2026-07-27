@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class AdminFairController extends Controller
 {
@@ -92,11 +93,11 @@ class AdminFairController extends Controller
             Storage::disk('public')->putFileAs("img/fair/{$randomDir}", $file, $filename);
             
             // データベースには 'storage/img/〜' の形でパスを保存（artisan storage:link前提）
-            $data['image_url'] = "img/fai/{$randomDir}/" . $filename;
+            $data['image_url'] = "img/fair/{$randomDir}/" . $filename;
         }
 
         Fair::create($data);
-        return redirect()->route('admin.fairs.index');
+        return redirect()->route('admin.fairs.index')->with('success', 'フェアを登録しました。');
     }
 
     /**
@@ -121,6 +122,13 @@ class AdminFairController extends Controller
     {
         $data = $request->validated();
 
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$fair->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'フェア情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         if ($request->hasFile('image')) {
             // 古い画像があれば Storage 経由で安全に削除
             // データベースに 'storage/img/filename' で入っているため、'img/filename' の形に変換して指定
@@ -141,12 +149,19 @@ class AdminFairController extends Controller
         }
 
         $fair->update($data);
-        return redirect()->route('admin.fairs.index');
+        return redirect()->route('admin.fairs.index')->with('success', 'フェアを更新しました。');
     }
 
-    public function destroy(Fair $fair)
+    public function destroy(Request $request, Fair $fair)
     {
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$fair->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'フェア情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         $fair->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'フェアを削除しました。');
     }
 }

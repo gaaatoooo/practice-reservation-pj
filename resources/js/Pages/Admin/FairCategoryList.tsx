@@ -1,11 +1,12 @@
 import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
-import { Plus, Trash2, Edit2, Check, X, Pencil, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, Check, X, Pencil, CheckCircle2, XCircle } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import DeleteConfirmModal from '@/components/layout/admin/DeleteConfirmModal';
 
 interface CategoryItem {
     id: number;
     name: string;
+    updated_at: string;
 }
 
 interface Props {
@@ -21,19 +22,24 @@ interface PageProps extends Record<string, any> {
 
 export default function AdminFairCategoryList({ categories }: Props) {
     const { flash } = usePage<PageProps>().props;
-    const [flashMessage, setFlashMessage] = useState<string | null>(null);
+    const [flashMessage, setFlashMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
     // ⭕️ フラッシュメッセージが届いたら画面にセットし、3秒後に自動消滅させる
     useEffect(() => {
         if (flash.success) {
-            setFlashMessage(flash.success);
-            const timer = setTimeout(() => {
-                setFlashMessage(null);
-            }, 3000);
-
+            setFlashMessage({ type: 'success', text: flash.success });
+            const timer = setTimeout(() => setFlashMessage(null), 3000);
+                
             return () => clearTimeout(timer);
         }
-    }, [flash.success, categories]);
+    
+        if (flash.error) {
+            setFlashMessage({ type: 'error', text: flash.error });
+            const timer = setTimeout(() => setFlashMessage(null), 3000);
+            
+            return () => clearTimeout(timer);
+        }
+    }, []);
 
     // ✏️ インライン編集モード管理ステート
     const [editingId, setEditingId] = useState<number | null>(null);
@@ -54,7 +60,7 @@ export default function AdminFairCategoryList({ categories }: Props) {
             onSuccess: () => {
                 addForm.reset();
                 // ⭕️ 送信成功時にローカルステートに直接テキストを注入
-                setFlashMessage('新しいフェアカテゴリを登録しました。');
+                setFlashMessage({type: 'success', text: '新しいフェアカテゴリを登録しました。'});
                 setTimeout(() => setFlashMessage(null), 3000);
             },
         });
@@ -78,12 +84,23 @@ export default function AdminFairCategoryList({ categories }: Props) {
             return;
         }
 
-        router.patch(`/admin/fair-categories/${id}`, { name: editingName }, {
-            onSuccess: () => {
+        const target = categories.find((c) => c.id === id);
+
+        router.patch(`/admin/fair-categories/${id}`, { 
+            name: editingName, updated_at: target?.updated_at
+        }, {
+            onSuccess: (page) => {
                 setEditingId(null);
                 // ⭕️ 更新成功時にローカルステートに直接テキストを注入
-                setFlashMessage('フェアカテゴリ名を変更しました。');
-                setTimeout(() => setFlashMessage(null), 3000);
+                const latestFlash = page.props.flash as { success?: string; error?: string };
+
+                if (latestFlash.success) {
+                    setFlashMessage({ type: 'success', text: latestFlash.success });
+                    setTimeout(() => setFlashMessage(null), 3000);
+                } else if (latestFlash.error) {
+                    setFlashMessage({ type: 'error', text: latestFlash.error });
+                    setTimeout(() => setFlashMessage(null), 3000);
+                }
             },
         });
     };
@@ -100,11 +117,24 @@ export default function AdminFairCategoryList({ categories }: Props) {
             return;
         }
 
+        const target = categories.find((c) => c.id === selectedCategory.id);
+
         setIsDeleting(true);
         router.delete(`/admin/fair-categories/${selectedCategory.id}`, {
-            onSuccess: () => {
+            data: { updated_at: target?.updated_at },
+            onSuccess: (page) => {
                 setIsDeleteModalOpen(false);
                 setSelectedCategory(null);
+
+                const latestFlash = page.props.flash as { success?: string; error?: string };
+            
+                if (latestFlash.success) {
+                    setFlashMessage({ type: 'success', text: latestFlash.success });
+                    setTimeout(() => setFlashMessage(null), 3000);
+                } else if (latestFlash.error) {
+                    setFlashMessage({ type: 'error', text: latestFlash.error });
+                    setTimeout(() => setFlashMessage(null), 3000);
+                }
             },
             onFinish: () => setIsDeleting(false),
         });
@@ -132,9 +162,17 @@ export default function AdminFairCategoryList({ categories }: Props) {
                 
                 {/* ⭕️ ローカルステートで確実に制御・表示する通知バー */}
                 {flashMessage && (
-                    <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 mb-2 rounded-xl transition-all duration-300 animate-fade-in text-sm font-medium shadow-sm">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>{flashMessage}</span>
+                    <div className={`flex items-center gap-2 px-4 py-3 mb-2 rounded-xl transition-all duration-300 animate-fade-in text-sm font-medium shadow-sm ${
+                        flashMessage.type === 'success'
+                            ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                            : 'bg-rose-50 border border-rose-200 text-rose-800'
+                    }`}>
+                        {flashMessage.type === 'success' ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        ) : (
+                            <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                        )}
+                        <span>{flashMessage.text}</span>
                     </div>
                 )}
 

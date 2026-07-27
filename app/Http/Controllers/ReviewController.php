@@ -11,8 +11,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 
-use Illuminate\Support\Facades\Log;
-
 class ReviewController extends Controller
 {
     /**
@@ -20,14 +18,10 @@ class ReviewController extends Controller
      */
     public function index(): Response
     {
-        log::alert('到着');
-
         $reviews = Review::with(['room', 'plan'])
             ->where('user_id', Auth::id()) // 自分が投稿したものだけ
             ->latest()                     // 投稿日時の新しい順
             ->get();
-
-        log::alert($reviews);
 
         return Inertia::render('User/ReviewList', [
             'reviews' => $reviews

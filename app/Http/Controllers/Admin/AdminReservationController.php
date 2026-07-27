@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\StoreReservationRequest;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class AdminReservationController extends Controller
 {
@@ -177,6 +178,14 @@ class AdminReservationController extends Controller
             'plan_id.required'                => 'プランを選択してください。'
         ]);
 
+        // ⭕️ フロントから送られてきたupdated_atと、DB上の現在のupdated_atを比較
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$reservation->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'この予約は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         // 3. データベースを一括更新
         $reservation->update($validated);
 
@@ -188,36 +197,55 @@ class AdminReservationController extends Controller
     /**
      * 管理者による代理キャンセル処理
      */
-    public function cancel(Reservation $reservation)
+    public function cancel(Request $request, Reservation $reservation)
     {
         // すでにキャンセル済みの場合は早期リターン
         if ($reservation->status === 2) {
-            return redirect()->back();
+            return redirect()->back()->with('error', 'この予約はキャンセル済みです。画面を再読み込みしてください。');
+        }
+
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$reservation->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'この予約は他の操作によって更新されています。画面を再読み込みしてください。');
         }
 
         // トランザクションを張り、ステータス更新と空室履歴の自動削除を安全に実行
         DB::transaction(function () use ($reservation) {
             // 1. ステータスを 2:キャンセル済 に更新
-            $reservation->update(['status' => 2]);
+            $reservation->update(['status' => 2, 'cancel_date' => Carbon::now()]);
 
             // 2. 期間中の該当部屋の空室履歴（room_availabilities）を自動削除して在庫を即時返却
             DB::table('room_availabilities')
                 ->where('room_id', $reservation->room_id)
-                ->where('date', '>=', $reservation->checkin_date)
-                ->where('date', '<', $reservation->checkout_date)
+                ->where('date', '>=', $reservation->reservation_start_date)
+                ->where('date', '<', $reservation->reservation_end_date)
                 ->delete();
         });
 
         // ユーザー側へのHTMLメール送信処理(try-catch)等が必要であれば、ここに既存のMailableロジックを挟むことも可能です
 
-        return redirect()->back();
+        return redirect()->back()->with('success', "予約 #{$reservation->id} をキャンセルしました。");;
     }
 
     /**
      * ⭕️ 予約のチェックイン処理
      */
-    public function checkin(Reservation $reservation)
+    public function checkin(Request $request, Reservation $reservation)
     {
+        // すでにキャンセル済みの場合は早期リターン
+        if ($reservation->status === 3) {
+            return redirect()->back()->with('error', 'この予約はチェックイン済みです。画面を再読み込みしてください。');
+        }
+
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$reservation->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'この予約は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         // 予約がキャンセルされていない場合のみステータスを 3（チェックイン済み）に変更
         if ($reservation->status !== 2) {
             $reservation->update([

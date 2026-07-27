@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import React from 'react';
+import React, { useEffect } from 'react'; 
+import FlashMessage from '@/components/layout/admin/FlashMessage';
 
 interface RoomItem {
     id: number;
@@ -11,6 +12,7 @@ interface RoomItem {
     capacity: string;
     url: string;
     total_rooms: string;
+    updated_at: string;
 }
 
 interface Props {
@@ -29,13 +31,24 @@ export default function AdminRoomEditForm({ room, statusList = {} }: Props) {
         capacity: room.capacity,
         url: room.url,
         total_rooms: room.total_rooms,
+        updated_at: room.updated_at,
     });
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // ⚠️ FormData を画像付きで送るため、PATCHではなく、POSTの引数として送信します
         post(`/admin/rooms/${room.id}`, {
             forceFormData: true,
+            onSuccess: (page) => {
+                // サーバーから新しく返ってきた最新の room データを取得
+                const updatedRoom = page.props.room as RoomItem;
+                
+                if (updatedRoom && updatedRoom.updated_at) {
+                    // 正常更新できたので、次の更新のために updated_at を最新化する
+                    setData('updated_at', updatedRoom.updated_at);
+                }
+            },
         });
     };
 
@@ -56,6 +69,7 @@ export default function AdminRoomEditForm({ room, statusList = {} }: Props) {
             </header>
 
             <main className="max-w-3xl mx-auto px-4 py-8">
+                <FlashMessage />
                 <div className="mb-6">
                     <p className="text-sm text-slate-500 mt-1">
                         部屋情報を修正し、上書き保存します。

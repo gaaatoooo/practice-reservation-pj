@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Trash2, Edit3, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import React, { useState } from 'react';
 import DeleteConfirmModal from '@/components/layout/admin/DeleteConfirmModal';
+import FlashMessage from '@/components/layout/admin/FlashMessage';
 import Pagination from '@/components/layout/admin/Pagination'; 
 
 interface LinkItem {
@@ -110,6 +111,7 @@ export default function AdminRoomList({ rooms, filters = {}, statusList = {} }: 
 
             {/* メインコンテンツエリア */}
             <main className="max-w-6xl mx-auto px-4 py-8">
+                <FlashMessage />
                 {/* タイトルと新規作成ボタン */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
@@ -268,7 +270,7 @@ export default function AdminRoomList({ rooms, filters = {}, statusList = {} }: 
                                                         </Link>
                                                         <button
                                                             type="button"
-                                                            onClick={() => openDeleteModal(room.id, room.title)}
+                                                            onClick={() => openDeleteModal(room.id, room.name)}
                                                             className="p-1.5 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-md bg-white hover:bg-rose-50/30 transition-all"
                                                             title="削除"
                                                         >

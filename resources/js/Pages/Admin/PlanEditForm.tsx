@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import React from 'react';
+import FlashMessage from '@/components/layout/admin/FlashMessage';
 
 interface PlanItem {
     id: number;
@@ -7,6 +8,7 @@ interface PlanItem {
     status: number;
     description: string; // ⭕️ description に修正
     price: string;
+    updated_at: string;
 }
 
 interface Props {
@@ -20,6 +22,7 @@ export default function AdminPlanEditForm({ plan, statusList = {} }: Props) {
         status: String(plan.status),
         description: plan.description, // ⭕️ description に修正
         price: plan.price,
+        updated_at: plan.updated_at,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -45,6 +48,7 @@ export default function AdminPlanEditForm({ plan, statusList = {} }: Props) {
             </header>
 
             <main className="max-w-3xl mx-auto px-4 py-8">
+                <FlashMessage />
                 <div className="mb-6">
                     <p className="text-sm text-slate-500 mt-1">
                         プラン内容を修正し、上書き保存します。

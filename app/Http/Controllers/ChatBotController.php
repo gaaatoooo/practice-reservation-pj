@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use OpenAI\Laravel\Facades\OpenAI;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -32,19 +32,36 @@ class ChatBotController extends Controller
         ・朝食について：1階レストランにて和洋バイキングを提供しています。料金は大人2,000円、子供1,000円です。時間は 7:00〜9:30 です。";
 
         try {
-            // OpenAI APIを呼び出し
-            $response = OpenAI::chat()->create([
-                'model' => 'gpt-4o-mini', // 高速かつ低コストなモデルを推奨
+            // 💡 環境変数からGroqのAPIキーを取得
+            $apiKey = get_cfg_var('GROQ_API_KEY') ?: ($_ENV['GROQ_API_KEY'] ?? env('GROQ_API_KEY'));
+
+            if (!$apiKey) {
+                throw new \Exception('GROQ_API_KEYが設定されていません。');
+            }
+            
+            // 💡 Groq APIへの標準的なリクエスト
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json',
+            ])->post('https://groq.com', [
+                'model' => 'llama-3.1-8b-instant', // 👈 無料枠で確実に動く超高速モデル
                 'messages' => [
                     ['role' => 'system', 'content' => $systemPrompt],
                     ['role' => 'user', 'content' => $userMessage],
                 ],
-                'temperature' => 0.3, // 回答のブレ（嘘）を減らすために低めに設定
+                'temperature' => 0.3,
             ]);
 
-            log::alert($response);
+            if ($response->failed()) {
+                throw new \Exception('Groq API接続エラー: ' . $response->body());
+            }
 
-            $aiResponse = $response->choices[0]->message->content;
+            $result = $response->json();
+            $aiResponse = $result['choices'][0]['message']['content'] ?? null;
+
+            if (!$aiResponse) {
+                throw new \Exception('レスポンスの構造解析に失敗しました。');
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -52,7 +69,8 @@ class ChatBotController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('AIチャットエラー: ' . $e->getMessage());
+            Log::error('AIチャットエラー: ' . $e->getMessage());
+
             return response()->json([
                 'status' => 'error',
                 'reply' => '申し訳ありません。システムに一時的な問題が発生しています。しばらく経ってから再度お試しください。',

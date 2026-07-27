@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 class StoreNoticeRequest extends FormRequest
 {
@@ -20,8 +19,6 @@ class StoreNoticeRequest extends FormRequest
      */
     public function rules(): array
     {
-        log::alert($this->input());
-
         return [
             'title' => 'required|string|max:255',
             'category' => 'required|integer|in:1,2,3', // 1=重要, 2=イベント, 3=案内

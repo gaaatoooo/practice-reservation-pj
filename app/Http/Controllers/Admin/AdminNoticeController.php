@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\StoreNoticeRequest;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class AdminNoticeController extends Controller
 {
@@ -83,7 +84,7 @@ class AdminNoticeController extends Controller
         Notice::create($validated);
 
         // 保存完了後、一覧画面へフラッシュリダイレクト
-        return redirect()->route('admin.notices.index');
+        return redirect()->route('admin.notices.index')->with('success', 'お知らせを登録しました。');
     }
 
     /**
@@ -109,19 +110,33 @@ class AdminNoticeController extends Controller
         // 検証済みのクリーンなデータを一括取得
         $validated = $request->validated();
 
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$notice->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'お知らせ情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         // データベース上の既存レコードを上書き更新
         $notice->update($validated);
 
         // 更新完了後、一覧画面へリダイレクト
-        return redirect()->route('admin.notices.index');
+        return redirect()->route('admin.notices.index')->with('success', 'お知らせを更新しました。');
     }
 
     /**
      * お知らせの削除
      */
-    public function destroy(Notice $notice)
+    public function destroy(Request $request, Notice $notice)
     {
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$notice->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'お知らせ情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         $notice->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'お知らせを削除しました。');
     }
 }

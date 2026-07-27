@@ -41,7 +41,7 @@ export default function AdminPlanForm({statusList = {}}: Props) {
             <main className="max-w-3xl mx-auto px-4 py-8">
                 <div className="mb-6">
                     <p className="text-sm text-slate-500 mt-1">
-                        期間限定プランの情報を入力して公開または下書き保存します。
+                        プランの情報を入力して公開または下書き保存します。
                     </p>
                 </div>
 

@@ -26,7 +26,7 @@ export default function DeleteConfirmModal({
                     削除しますか？
                 </h3>
                 <p className="text-sm text-slate-500 leading-relaxed mb-6">
-                    対象のアイテム：<span className="font-semibold text-slate-800">「{title}」</span>
+                    対象のデータ：<span className="font-semibold text-slate-800">「{title}」</span>
                 </p>
                 
                 <div className="flex justify-end gap-2">

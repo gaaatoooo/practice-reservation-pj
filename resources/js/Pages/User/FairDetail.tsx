@@ -17,7 +17,7 @@ export default function FairShow({ fair }: Props) {
 
     // ⭕️ 戻り先のURLと文言の初期値を設定（デフォルトは一覧画面）
     const [backUrl, setBackUrl] = useState('/user/fairs');
-    const [backLabel, setBackLabel] = useState('フェア・プラン一覧へ戻る');
+    const [backLabel, setBackLabel] = useState('フェア一覧へ戻る');
 
     // ⭕️ マウント時に遷移元（リファラ）を検知して戻り先を上書き
     useEffect(() => {

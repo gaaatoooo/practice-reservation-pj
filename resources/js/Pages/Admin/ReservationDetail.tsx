@@ -1,5 +1,6 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { differenceInDays } from 'date-fns';
+import { CheckCircle2, XCircle } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import CancelConfirmModal from '@/components/layout/admin/CancelConfirmModal';
 import CheckinConfirmModal from '@/components/layout/admin/CheckinConfirmModal';
@@ -43,6 +44,7 @@ interface Reservation {
     room: Room;
     number: number;
     plan: Plan;
+    updated_at: string;
 }
 
 interface Props {
@@ -51,12 +53,40 @@ interface Props {
     rooms: Room[];
 }
 
+interface PageProps extends Record<string, any> {
+    flash: {
+        success: string | null;
+        error: string | null;
+    };
+}
+
 export default function AdminReservationDetail({ reservation, rooms, plans }: Props) {
+    const { flash } = usePage<PageProps>().props;
+    const [flashMessage, setFlashMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    
+    useEffect(() => {
+        if (flash.success) {
+            setFlashMessage({ type: 'success', text: flash.success });
+            const timer = setTimeout(() => setFlashMessage(null), 3000);
+            
+            return () => clearTimeout(timer);
+        }
+
+        if (flash.error) {
+            setFlashMessage({ type: 'error', text: flash.error });
+            const timer = setTimeout(() => setFlashMessage(null), 3000);
+            
+            return () => clearTimeout(timer);
+        }
+    }, [flash.success, flash.error]);
+
     // ⚠️ チェックイン確認モーダルの開閉ステートを追加（コンポーネント上部に記述）
     const [isCheckinModalOpen, setIsCheckinModalOpen] = useState(false);
 
     // 🟢 チェックインリクエスト用フォームフックを追加（コンポーネント上部に記述）
-    const checkinForm = useForm({});
+    const checkinForm = useForm({
+        updated_at: reservation.updated_at,
+    });
 
     // チェックイン実行ハンドラ
     const handleCheckinSubmit = () => {
@@ -80,10 +110,12 @@ export default function AdminReservationDetail({ reservation, rooms, plans }: Pr
         number: reservation.number || '',
         plan_id: reservation.plan_id || '',
         room_id: reservation.room_id || '',
+        updated_at: reservation.updated_at,
     });
 
-    // 🔴 キャンセルリクエスト用フォーム
-    const cancelForm = useForm({});
+    const cancelForm = useForm({
+        updated_at: reservation.updated_at, // ⭕️ 追加
+    });
 
     // ⭕️ 人数、または選択プランが変更された際に合計金額をリアルタイム動的再計算するロジック
     useEffect(() => {
@@ -155,6 +187,20 @@ export default function AdminReservationDetail({ reservation, rooms, plans }: Pr
 
             {/* メインコンテンツ */}
             <main className="max-w-4xl mx-auto px-4 py-8">
+                {flashMessage && (
+                    <div className={`flex items-center gap-2 px-4 py-3 mb-6 rounded-xl text-sm font-medium shadow-sm ${
+                        flashMessage.type === 'success'
+                            ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                            : 'bg-rose-50 border border-rose-200 text-rose-800'
+                    }`}>
+                        {flashMessage.type === 'success' ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        ) : (
+                            <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                        )}
+                        <span>{flashMessage.text}</span>
+                    </div>
+                )}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-3">

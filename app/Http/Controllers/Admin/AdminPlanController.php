@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\StorePlanRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class AdminPlanController extends Controller
 {
@@ -52,7 +53,7 @@ class AdminPlanController extends Controller
         $data = $request->validated();
 
         Plan::create($data);
-        return redirect()->route('admin.plans.index');
+        return redirect()->route('admin.plans.index')->with('success', 'プランを登録しました。');
     }
 
     /**
@@ -75,13 +76,27 @@ class AdminPlanController extends Controller
     {
         $data = $request->validated();
 
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$plan->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'プラン情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         $plan->update($data);
-        return redirect()->route('admin.plans.index');
+        return redirect()->route('admin.plans.index')->with('success', 'プランを更新しました。');
     }
 
-    public function destroy(Plan $plan)
+    public function destroy(Request $request, Plan $plan)
     {
+        $currentUpdatedAt = $request->input('updated_at');
+        $currentCarbon = Carbon::parse($currentUpdatedAt)->setTimezone(config('app.timezone'));
+
+        if ($currentUpdatedAt && !$plan->updated_at->eq($currentCarbon)) {
+            return back()->with('error', 'プラン情報は他の操作によって更新されています。画面を再読み込みしてください。');
+        }
+
         $plan->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'プランを削除しました。');
     }
 }

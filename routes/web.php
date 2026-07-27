@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\AdminRoomController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminPlanController;
 use App\Http\Controllers\Admin\AdminMemberController;
+use App\Http\Controllers\Admin\AdminHotelDetailController;
+use App\Http\Controllers\Admin\AdminRestaurantReservationController;
 
 use App\Http\Controllers\RoomAvailabilityController;
 use App\Http\Controllers\ReservationController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ChatBotController;
+use App\Http\Controllers\RestaurantReservationController;
 
 Route::inertia('/', 'welcome')->name('home');
 Route::inertia('dashboard', 'dashboard')->name('dashboard');
@@ -63,10 +66,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/user/review', [ReviewController::class, 'index'])->name('user.reviews.index');
     Route::get('/user/review/create', [ReviewController::class, 'create'])->name('review.create');
     Route::post('/user/review', [ReviewController::class, 'store'])->name('review.store');
+
+    Route::get('/user/restaurant-reservation', [RestaurantReservationController::class, 'index'])
+        ->name('user.restaurant_reservation.index');
+    Route::post('/user/restaurant-reservation', [RestaurantReservationController::class, 'store'])
+        ->name('user.restaurant_reservation.store');
+    Route::delete('/user/restaurant-reservation/{reservation}', [RestaurantReservationController::class, 'destroy'])
+        ->name('user.restaurant_reservation.destroy');
 });
 
 // 管理者用ルートグループ
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     // 予約管理一覧
     Route::get('/reservations', [AdminReservationController::class, 'index'])->name('reservations.index');
@@ -144,6 +154,17 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::patch('/members/{member}', [AdminMemberController::class, 'update'])->name('members.update');
     Route::delete('/members/{member}', [AdminMemberController::class, 'destroy'])->name('members.destroy');
 
+    // ホテル情報編集
+    Route::get('/hotel-detail', [AdminHotelDetailController::class, 'index'])->name('hotel_detail.index');
+    Route::patch('/hotel-detail/{hotel_detail}', [AdminHotelDetailController::class, 'update'])->name('hotel_detail.update');
+
+    // レストラン予約管理一覧
+    Route::get('/restaurant_reservations', [AdminRestaurantReservationController::class, 'index'])->name('restaurant_reservations.index');
+    Route::get('/restaurant_reservations/create', [AdminRestaurantReservationController::class, 'create'])->name('restaurant_reservations.create');
+    Route::post('/restaurant_reservations', [AdminRestaurantReservationController::class, 'store'])->name('restaurant_reservations.store');
+    Route::get('/restaurant_reservations/{stock}/edit', [AdminRestaurantReservationController::class, 'edit'])->name('restaurant_reservations.edit');
+    Route::patch('/restaurant_reservations/{stock}', [AdminRestaurantReservationController::class, 'update'])->name('restaurant_reservations.update');
+    Route::delete('/restaurant_reservations/{stock}', [AdminRestaurantReservationController::class, 'destroy'])->name('restaurant_reservations.destroy');
 });
 
 // ユーザー用ルートグループ
